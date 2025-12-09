@@ -39,10 +39,18 @@ const plots = [
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const plotId = parseInt(urlParams.get('id'));
+    const autodownload = urlParams.get('autodownload');
     
     if (plotId) {
         loadPlotDetails(plotId);
         loadRelatedPlots(plotId);
+        
+        // Auto-download if coming from login/signup
+        if (autodownload === 'true') {
+            setTimeout(() => {
+                downloadPack(plotId);
+            }, 500);
+        }
     } else {
         window.location.href = 'plots.html';
     }
@@ -262,8 +270,101 @@ function calculateStampDuty(price) {
 
 function downloadPack(id) {
     const plot = plots.find(p => p.id === id);
-    alert(`To download the complete property pack for ${plot.number}, please create a free account or sign in.\n\nYou'll get instant access to:\n✓ All legal documents\n✓ Floor plans & specifications\n✓ NHBC warranty details\n✓ Service charge information\n✓ And more...`);
-    window.location.href = `portal/signup.html?plot=${id}&action=download`;
+    
+    // Check if user is logged in
+    const user = getCurrentUser();
+    
+    if (!user) {
+        // Not logged in - redirect to signup with return info
+        if (confirm(`To download the complete property pack for ${plot.number}, please create a free account or sign in.\n\nYou'll get instant access to:\n✓ All legal documents\n✓ Floor plans & specifications\n✓ NHBC warranty details\n✓ Service charge information\n✓ And more...\n\nClick OK to create account or Cancel to sign in.`)) {
+            window.location.href = `portal/signup.html?plot=${id}&action=download`;
+        } else {
+            window.location.href = `portal/login.html?plot=${id}&action=download`;
+        }
+        return;
+    }
+    
+    // User is logged in - proceed with download
+    performPackDownload(plot);
+}
+
+function performPackDownload(plot) {
+    // Track download
+    const downloads = JSON.parse(localStorage.getItem('nhp_downloads') || '[]');
+    downloads.push({
+        plotId: plot.id,
+        plotNumber: plot.number,
+        development: plot.development,
+        downloadDate: new Date().toISOString(),
+        price: plot.price
+    });
+    localStorage.setItem('nhp_downloads', JSON.stringify(downloads));
+    
+    // Show download modal
+    showDownloadModal(plot);
+}
+
+function showDownloadModal(plot) {
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+    
+    modal.innerHTML = `
+        <div style="background: white; border-radius: 12px; padding: 2rem; max-width: 500px; width: 90%;">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">✅</div>
+                <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem;">Pack Download Started!</h2>
+                <p style="color: var(--gray-600);">Your property pack for ${plot.number} is being prepared</p>
+            </div>
+            
+            <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                <h3 style="font-weight: 600; margin-bottom: 1rem;">What's included:</h3>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="color: var(--primary-red);">✓</span> Legal Pack (Title, Searches, Planning)
+                    </li>
+                    <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="color: var(--primary-red);">✓</span> Floor Plans & Specifications
+                    </li>
+                    <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="color: var(--primary-red);">✓</span> NHBC Certificate & Warranties
+                    </li>
+                    <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="color: var(--primary-red);">✓</span> Service Charges & Management Info
+                    </li>
+                    <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="color: var(--primary-red);">✓</span> Energy Performance Certificate
+                    </li>
+                </ul>
+            </div>
+            
+            <div style="background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%); color: white; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: center;">
+                <p style="margin: 0; font-size: 0.875rem;">💡 In production, your PDF would download automatically</p>
+            </div>
+            
+            <div style="display: flex; gap: 1rem;">
+                <button onclick="this.closest('div[style*=\"position: fixed\"]').remove(); window.location.href='portal/buyer/dashboard.html';" 
+                    style="flex: 1; padding: 0.75rem; background: var(--primary-red); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                    View My Dashboard
+                </button>
+                <button onclick="this.closest('div[style*=\"position: fixed\"]').remove();" 
+                    style="flex: 1; padding: 0.75rem; background: var(--gray-200); color: var(--primary-black); border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                    Continue Browsing
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+function getCurrentUser() {
+    const sessionUser = sessionStorage.getItem('nhp_user');
+    const localUser = localStorage.getItem('nhp_user');
+    
+    if (sessionUser) return JSON.parse(sessionUser);
+    if (localUser) return JSON.parse(localUser);
+    
+    return null;
 }
 
 function bookViewing(id) {

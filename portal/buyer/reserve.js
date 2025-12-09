@@ -4,6 +4,55 @@ let currentStep = 1;
 const totalSteps = 5;
 let signaturePad = null;
 
+// Plot data with site plan positions
+const plotsData = {
+    '1': { 
+        number: 'Plot 1', 
+        development: 'Greenfield Gardens', 
+        price: 425000,
+        type: '4 Bedroom Detached',
+        sqft: '1,850',
+        status: 'Available',
+        description: 'Premium corner plot with south-facing garden'
+    },
+    '2': { 
+        number: 'Plot 2', 
+        development: 'Greenfield Gardens', 
+        price: 325000,
+        type: '3 Bedroom Semi-Detached',
+        sqft: '1,200',
+        status: 'Available',
+        description: 'Family home with modern layout'
+    },
+    '3': { 
+        number: 'Plot 3', 
+        development: 'Riverside Heights', 
+        price: 245000,
+        type: '2 Bedroom Semi-Detached',
+        sqft: '950',
+        status: 'Available',
+        description: 'Perfect first home or investment'
+    },
+    '4': { 
+        number: 'Plot 4', 
+        development: 'Greenfield Gardens', 
+        price: 285000,
+        type: '3 Bedroom Terraced',
+        sqft: '1,100',
+        status: 'Available',
+        description: 'Modern terrace with low maintenance garden'
+    },
+    '5': { 
+        number: 'Plot 5', 
+        development: 'Oakwood Manor', 
+        price: 595000,
+        type: '5 Bedroom Detached',
+        sqft: '2,400',
+        status: 'Available',
+        description: 'Executive home with double garage'
+    }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     const user = checkAuth();
     if (!user) return;
@@ -18,21 +67,18 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (plotId) {
         loadPlotInfo(plotId);
+        highlightPlotOnMap(plotId);
     }
 
     // Initialize signature pad
     initSignaturePad();
+    
+    // Add click handlers to site plan plots
+    initSitePlanInteractivity();
 });
 
 function loadPlotInfo(plotId) {
-    // In production, fetch from API
-    const plots = {
-        '1': { number: 'Plot 1', development: 'Greenfield Gardens', price: 425000 },
-        '2': { number: 'Plot 2', development: 'Greenfield Gardens', price: 325000 },
-        '3': { number: 'Plot 3', development: 'Greenfield Gardens', price: 285000 }
-    };
-
-    const plot = plots[plotId] || plots['1'];
+    const plot = plotsData[plotId] || plotsData['1'];
     
     document.getElementById('plotInfo').textContent = 
         `Reserving ${plot.number}, ${plot.development} - £${plot.price.toLocaleString()}`;
@@ -42,8 +88,118 @@ function loadPlotInfo(plotId) {
             `${plot.number}, ${plot.development}`;
     }
 
+    // Update plot details card
+    updatePlotDetailsCard(plot);
+
     // Store plot info for later
     sessionStorage.setItem('reservationPlot', JSON.stringify(plot));
+}
+
+function updatePlotDetailsCard(plot) {
+    if (document.getElementById('selectedPlotNumber')) {
+        document.getElementById('selectedPlotNumber').textContent = plot.number;
+    }
+    if (document.getElementById('selectedDevelopment')) {
+        document.getElementById('selectedDevelopment').textContent = plot.development;
+    }
+    if (document.getElementById('selectedType')) {
+        document.getElementById('selectedType').textContent = plot.type;
+    }
+    if (document.getElementById('selectedPrice')) {
+        document.getElementById('selectedPrice').textContent = `£${plot.price.toLocaleString()}`;
+    }
+    if (document.getElementById('selectedSqft')) {
+        document.getElementById('selectedSqft').textContent = plot.sqft + ' sq ft';
+    }
+}
+
+function highlightPlotOnMap(plotId) {
+    // Remove existing highlights
+    document.querySelectorAll('.plot-marker').forEach(marker => {
+        const rect = marker.querySelector('rect');
+        if (rect) {
+            rect.setAttribute('fill', '#e8e8e8');
+            rect.setAttribute('stroke', '#999');
+            rect.setAttribute('stroke-width', '2');
+        }
+        // Remove any existing star
+        const existingStar = marker.querySelector('circle[fill="#FFD700"]');
+        if (existingStar) {
+            existingStar.remove();
+        }
+        const existingStarText = marker.querySelector('text:last-child');
+        if (existingStarText && existingStarText.textContent === '★') {
+            existingStarText.remove();
+        }
+    });
+    
+    // Highlight selected plot
+    const selectedPlot = document.getElementById(`plot${plotId}`);
+    if (selectedPlot) {
+        const rect = selectedPlot.querySelector('rect');
+        if (rect) {
+            rect.setAttribute('fill', '#DC2626');
+            rect.setAttribute('stroke', '#B71C1C');
+            rect.setAttribute('stroke-width', '3');
+            
+            // Change text color to white
+            selectedPlot.querySelectorAll('text').forEach(text => {
+                text.setAttribute('fill', 'white');
+            });
+            
+            // Add star indicator
+            const rectBounds = rect.getBBox();
+            const starX = rectBounds.x + rectBounds.width - 10;
+            const starY = rectBounds.y + 10;
+            
+            const star = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            star.setAttribute('cx', starX);
+            star.setAttribute('cy', starY);
+            star.setAttribute('r', '8');
+            star.setAttribute('fill', '#FFD700');
+            star.setAttribute('stroke', '#FFA500');
+            star.setAttribute('stroke-width', '2');
+            
+            const starText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            starText.setAttribute('x', starX);
+            starText.setAttribute('y', starY + 4);
+            starText.setAttribute('text-anchor', 'middle');
+            starText.setAttribute('font-size', '10');
+            starText.setAttribute('fill', '#000');
+            starText.textContent = '★';
+            
+            selectedPlot.appendChild(star);
+            selectedPlot.appendChild(starText);
+        }
+    }
+}
+
+function initSitePlanInteractivity() {
+    document.querySelectorAll('.plot-marker').forEach(marker => {
+        marker.addEventListener('click', function() {
+            const plotId = this.getAttribute('data-plot');
+            const plot = plotsData[plotId];
+            
+            if (plot) {
+                // Update URL without reload
+                const url = new URL(window.location);
+                url.searchParams.set('plot', plotId);
+                window.history.pushState({}, '', url);
+                
+                // Update display
+                loadPlotInfo(plotId);
+                highlightPlotOnMap(plotId);
+            }
+        });
+        
+        // Add hover effect
+        marker.addEventListener('mouseenter', function() {
+            this.style.opacity = '0.8';
+        });
+        marker.addEventListener('mouseleave', function() {
+            this.style.opacity = '1';
+        });
+    });
 }
 
 function nextStep() {

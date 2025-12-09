@@ -196,6 +196,131 @@
                 <p class="page-subtitle" id="plotInfo">Complete the form below to reserve your chosen plot</p>
             </div>
 
+            <!-- Plot Location Visualization -->
+            <div style="background: white; border-radius: 12px; padding: 2rem; box-shadow: var(--shadow-md); margin-bottom: 2rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem;">Development Site Plan</h2>
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                    <!-- Site Plan -->
+                    <div style="position: relative; border: 2px solid var(--gray-200); border-radius: 8px; overflow: hidden; background: var(--gray-50);">
+                        <div id="sitePlanContainer" style="padding: 2rem;">
+                            <!-- Birds-eye view SVG site plan will be rendered here -->
+                            <svg id="sitePlan" viewBox="0 0 600 400" style="width: 100%; height: auto; max-height: 400px;">
+                                <!-- Background -->
+                                <rect x="0" y="0" width="600" height="400" fill="#f0f4f0"/>
+                                
+                                <!-- Roads -->
+                                <path d="M 0 350 L 600 350" stroke="#666" stroke-width="30" fill="none"/>
+                                <path d="M 100 0 L 100 350" stroke="#666" stroke-width="25" fill="none"/>
+                                <path d="M 500 0 L 500 350" stroke="#666" stroke-width="25" fill="none"/>
+                                
+                                <!-- Road markings -->
+                                <path d="M 0 350 L 600 350" stroke="#fff" stroke-width="2" stroke-dasharray="20,10" fill="none"/>
+                                
+                                <!-- Green spaces -->
+                                <circle cx="300" cy="200" r="60" fill="#90EE90" opacity="0.5"/>
+                                <text x="300" y="205" text-anchor="middle" font-size="12" fill="#2d5016">Park</text>
+                                
+                                <!-- Plot 1 - Detached (highlighted) -->
+                                <g id="plot1" class="plot-marker" data-plot="1" style="cursor: pointer;">
+                                    <rect x="150" y="50" width="80" height="100" fill="#DC2626" stroke="#B71C1C" stroke-width="3" rx="4"/>
+                                    <text x="190" y="95" text-anchor="middle" font-size="16" font-weight="bold" fill="white">Plot 1</text>
+                                    <text x="190" y="115" text-anchor="middle" font-size="10" fill="white">4 Bed</text>
+                                    <circle cx="220" cy="60" r="8" fill="#FFD700" stroke="#FFA500" stroke-width="2"/>
+                                    <text x="220" y="64" text-anchor="middle" font-size="10" fill="#000">★</text>
+                                </g>
+                                
+                                <!-- Plot 2 - Semi-Detached -->
+                                <g id="plot2" class="plot-marker" data-plot="2" style="cursor: pointer;">
+                                    <rect x="260" y="50" width="65" height="80" fill="#e8e8e8" stroke="#999" stroke-width="2" rx="4"/>
+                                    <text x="292" y="90" text-anchor="middle" font-size="14" fill="#333">Plot 2</text>
+                                    <text x="292" y="105" text-anchor="middle" font-size="9" fill="#666">3 Bed</text>
+                                </g>
+                                
+                                <!-- Plot 3 - Semi-Detached -->
+                                <g id="plot3" class="plot-marker" data-plot="3" style="cursor: pointer;">
+                                    <rect x="260" y="140" width="65" height="80" fill="#e8e8e8" stroke="#999" stroke-width="2" rx="4"/>
+                                    <text x="292" y="180" text-anchor="middle" font-size="14" fill="#333">Plot 3</text>
+                                    <text x="292" y="195" text-anchor="middle" font-size="9" fill="#666">2 Bed</text>
+                                </g>
+                                
+                                <!-- Plot 4 - Terraced -->
+                                <g id="plot4" class="plot-marker" data-plot="4" style="cursor: pointer;">
+                                    <rect x="355" y="50" width="55" height="70" fill="#e8e8e8" stroke="#999" stroke-width="2" rx="4"/>
+                                    <text x="382" y="85" text-anchor="middle" font-size="12" fill="#333">Plot 4</text>
+                                    <text x="382" y="100" text-anchor="middle" font-size="8" fill="#666">3 Bed</text>
+                                </g>
+                                
+                                <!-- Plot 5 - Detached -->
+                                <g id="plot5" class="plot-marker" data-plot="5" style="cursor: pointer;">
+                                    <rect x="420" y="50" width="85" height="110" fill="#e8e8e8" stroke="#999" stroke-width="2" rx="4"/>
+                                    <text x="462" y="100" text-anchor="middle" font-size="14" fill="#333">Plot 5</text>
+                                    <text x="462" y="115" text-anchor="middle" font-size="9" fill="#666">5 Bed</text>
+                                </g>
+                                
+                                <!-- Plot 6-12 (smaller plots) -->
+                                <g id="plot6" class="plot-marker" data-plot="6" style="cursor: pointer;">
+                                    <rect x="150" y="230" width="60" height="70" fill="#e8e8e8" stroke="#999" stroke-width="2" rx="4"/>
+                                    <text x="180" y="265" text-anchor="middle" font-size="12" fill="#333">Plot 6</text>
+                                </g>
+                                <g id="plot7" class="plot-marker" data-plot="7" style="cursor: pointer;">
+                                    <rect x="220" y="230" width="60" height="70" fill="#e8e8e8" stroke="#999" stroke-width="2" rx="4"/>
+                                    <text x="250" y="265" text-anchor="middle" font-size="12" fill="#333">Plot 7</text>
+                                </g>
+                                <g id="plot8" class="plot-marker" data-plot="8" style="cursor: pointer;">
+                                    <rect x="290" y="230" width="60" height="70" fill="#e8e8e8" stroke="#999" stroke-width="2" rx="4"/>
+                                    <text x="320" y="265" text-anchor="middle" font-size="12" fill="#333">Plot 8</text>
+                                </g>
+                                
+                                <!-- Compass -->
+                                <g transform="translate(550, 30)">
+                                    <circle cx="0" cy="0" r="20" fill="white" stroke="#333" stroke-width="1"/>
+                                    <path d="M 0 -15 L 0 15" stroke="#DC2626" stroke-width="2"/>
+                                    <path d="M -15 0 L 15 0" stroke="#333" stroke-width="1"/>
+                                    <text x="0" y="-22" text-anchor="middle" font-size="10" font-weight="bold">N</text>
+                                </g>
+                            </svg>
+                        </div>
+                        <div style="background: var(--gray-100); padding: 0.75rem; text-align: center; border-top: 2px solid var(--gray-200); font-size: 0.875rem; color: var(--gray-600);">
+                            <strong>★</strong> Your Selected Plot • Click any plot to view details
+                        </div>
+                    </div>
+                    
+                    <!-- Plot Details Card -->
+                    <div id="plotDetailsCard" style="background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%); color: white; border-radius: 12px; padding: 1.5rem; height: fit-content;">
+                        <div style="text-align: center; margin-bottom: 1rem;">
+                            <div style="font-size: 0.875rem; opacity: 0.9; margin-bottom: 0.5rem;">You're Reserving</div>
+                            <h3 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem;" id="selectedPlotNumber">Plot 1</h3>
+                            <div style="opacity: 0.9; font-size: 0.875rem;" id="selectedDevelopment">Greenfield Gardens</div>
+                        </div>
+                        
+                        <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                            <div style="display: grid; gap: 0.75rem;">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="opacity: 0.9;">Type:</span>
+                                    <strong id="selectedType">4 Bedroom Detached</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="opacity: 0.9;">Price:</span>
+                                    <strong id="selectedPrice">£425,000</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="opacity: 0.9;">Floor Area:</span>
+                                    <strong id="selectedSqft">1,850 sq ft</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="opacity: 0.9;">Status:</span>
+                                    <span style="background: var(--accent-green); color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">Available</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="font-size: 0.875rem; opacity: 0.9; text-align: center;">
+                            📍 Premium corner plot with south-facing garden
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="reservation-wizard">
                 <!-- Progress Steps -->
                 <div class="wizard-steps">

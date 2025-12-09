@@ -403,7 +403,7 @@
                         </div>
 
                         <div class="form-actions">
-                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue to Source of Funds</button>
                         </div>
                     </div>
 
@@ -417,7 +417,7 @@
                                 <div>
                                     <strong style="display: block; margin-bottom: 0.5rem;">AML Verification Required</strong>
                                     <p style="font-size: 0.875rem; color: #856404; margin: 0;">
-                                        Under UK law, we must verify the source of your funds. You'll be redirected to our secure verification partner (Credas) to complete this process.
+                                        Under UK law, we must verify the source of your funds. You'll be redirected to our secure verification partner to complete this process.
                                     </p>
                                 </div>
                             </div>
@@ -465,24 +465,69 @@
 
                         <!-- Mortgage fields (shown if mortgage selected) -->
                         <div id="mortgageFields" style="display: none;">
-                            <div class="form-group">
-                                <label class="form-label" for="mortgageLender">Mortgage Lender *</label>
-                                <input type="text" id="mortgageLender" name="mortgageLender" class="form-input" placeholder="E.g. Nationwide, Halifax">
+                            <!-- Connected Mortgage Offer -->
+                            <div id="connectedMortgageOffer" style="display: none; background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(34, 197, 94, 0.15) 100%); border: 2px solid var(--success-green); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                                    <div>
+                                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                            <span style="font-size: 1.5rem;">✅</span>
+                                            <h4 style="font-weight: 700; font-size: 1.125rem; margin: 0;">Mortgage Offer Connected</h4>
+                                        </div>
+                                        <p style="font-size: 0.875rem; color: var(--gray-700); margin: 0;" id="connectedOfferSummary">Nationwide • £380,000 • 2.89% Fixed</p>
+                                    </div>
+                                    <button type="button" onclick="removeMortgageOffer()" class="btn btn-secondary btn-small">Change</button>
+                                </div>
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; background: white; padding: 1rem; border-radius: 8px;">
+                                    <div>
+                                        <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">Loan Amount</div>
+                                        <div style="font-weight: 700; font-size: 1.125rem;" id="offerLoanAmount">£380,000</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">Monthly Payment</div>
+                                        <div style="font-weight: 700; font-size: 1.125rem;" id="offerMonthlyPayment">£1,650</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">LTV</div>
+                                        <div style="font-weight: 700; font-size: 1.125rem;" id="offerLTV">80%</div>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="form-label" for="mortgageAmount">Mortgage Amount (£) *</label>
-                                <input type="number" id="mortgageAmount" name="mortgageAmount" class="form-input" placeholder="375000" min="0" step="1000">
-                            </div>
+                            <!-- No connected offer - manual entry or connect -->
+                            <div id="noConnectedMortgageOffer">
+                                <div style="background: var(--gray-50); border: 2px dashed var(--gray-300); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; text-align: center;">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏦</div>
+                                    <h4 style="font-weight: 600; margin-bottom: 0.5rem;">Connect Your Mortgage Offer</h4>
+                                    <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1rem;">
+                                        Automatically import your mortgage details from your lender
+                                    </p>
+                                    <button type="button" onclick="redirectToMortgagePage()" class="btn btn-primary">
+                                        🔗 Connect Lender
+                                    </button>
+                                    <p style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.75rem;">
+                                        Or enter details manually below
+                                    </p>
+                                </div>
 
-                            <div class="form-group">
-                                <label class="form-label" for="mortgageApproval">Mortgage Decision in Principle *</label>
-                                <input type="file" id="mortgageApproval" name="mortgageApproval" class="form-input" accept=".pdf,.jpg,.png,.jpeg">
-                                <p style="font-size: 0.875rem; color: var(--gray-600); margin-top: 0.5rem;">Upload your DIP certificate (required for mortgage applications)</p>
+                                <div class="form-group">
+                                    <label class="form-label" for="mortgageLender">Mortgage Lender *</label>
+                                    <input type="text" id="mortgageLender" name="mortgageLender" class="form-input" placeholder="E.g. Nationwide, Halifax">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="mortgageAmount">Mortgage Amount (£) *</label>
+                                    <input type="number" id="mortgageAmount" name="mortgageAmount" class="form-input" placeholder="375000" min="0" step="1000">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="mortgageApproval">Mortgage Decision in Principle *</label>
+                                    <input type="file" id="mortgageApproval" name="mortgageApproval" class="form-input" accept=".pdf,.jpg,.png,.jpeg">
+                                    <p style="font-size: 0.875rem; color: var(--gray-600); margin-top: 0.5rem;">Upload your DIP certificate (required for mortgage applications)</p>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Credas AML Verification Section -->
+                        <!-- AML Verification Section -->
                         <div style="background: var(--gray-50); border: 2px solid var(--gray-200); border-radius: 12px; padding: 1.5rem; margin-top: 2rem;">
                             <h3 style="font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
                                 <span style="font-size: 1.5rem;">🔒</span>
@@ -491,7 +536,7 @@
                             
                             <div style="margin-bottom: 1rem;">
                                 <p style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-bottom: 1rem;">
-                                    To comply with UK Anti-Money Laundering regulations, we use <strong>Credas</strong>, a secure third-party verification service, to verify:
+                                    To comply with UK Anti-Money Laundering regulations, we use a secure third-party verification service to verify:
                                 </p>
                                 <ul style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-left: 1.5rem; margin-bottom: 1rem;">
                                     <li>Your identity</li>
@@ -515,11 +560,11 @@
                             </div>
 
                             <button type="button" id="credasVerifyBtn" class="btn btn-primary" onclick="initiateCredasVerification()" style="width: 100%;">
-                                🔒 Begin Credas Verification
+                                🔒 Begin Verification
                             </button>
 
                             <p style="font-size: 0.75rem; color: var(--gray-600); margin-top: 1rem; text-align: center;">
-                                💡 <strong>MVP Note:</strong> Credas integration ready - will connect to live API in production
+                                💡 <strong>MVP Note:</strong> Third-party verification integration ready - will connect to live API in production
                             </p>
                         </div>
 
@@ -533,38 +578,127 @@
                     <div class="wizard-content form-section" data-section="3">
                         <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Your Solicitor Details</h2>
                         
-                        <div class="form-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="haveSolicitor" onchange="toggleSolicitorFields()">
-                                <span>I have already appointed a solicitor</span>
-                            </label>
+                        <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">Do you have an instructed solicitor?</h3>
+                            <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1.5rem;">
+                                You'll need a solicitor to handle the conveyancing for this purchase. If you haven't appointed one yet, we can connect you with approved solicitors for this development.
+                            </p>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="haveSolicitor">Instructed Solicitor Status *</label>
+                                <select id="haveSolicitor" name="haveSolicitor" class="form-input" required onchange="toggleSolicitorFields()">
+                                    <option value="">Select an option...</option>
+                                    <option value="yes">Yes - I have instructed a solicitor</option>
+                                    <option value="no">No - I need to appoint a solicitor</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div id="solicitorFields" style="display: none;">
+                        <!-- If YES - show solicitor details fields -->
+                        <div id="solicitorDetailsSection" style="display: none;">
+                            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">Solicitor Contact Information</h3>
+                            <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1.5rem;">
+                                Please provide your solicitor's details so we can send them the property pack and contract details.
+                            </p>
+
                             <div class="form-group">
                                 <label class="form-label" for="solicitorFirm">Solicitor Firm Name *</label>
-                                <input type="text" id="solicitorFirm" name="solicitorFirm" class="form-input">
+                                <input type="text" id="solicitorFirm" name="solicitorFirm" class="form-input" placeholder="e.g. Smith & Partners Solicitors">
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label" for="solicitorContact">Contact Name *</label>
-                                <input type="text" id="solicitorContact" name="solicitorContact" class="form-input">
+                                <label class="form-label" for="solicitorContact">Contact Person Name *</label>
+                                <input type="text" id="solicitorContact" name="solicitorContact" class="form-input" placeholder="e.g. Jane Smith">
                             </div>
 
-                            <div class="form-group">
-                                <label class="form-label" for="solicitorEmail">Email Address *</label>
-                                <input type="email" id="solicitorEmail" name="solicitorEmail" class="form-input">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label" for="solicitorEmail">Email Address *</label>
+                                    <input type="email" id="solicitorEmail" name="solicitorEmail" class="form-input" placeholder="jane.smith@solicitors.com">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="solicitorPhone">Phone Number *</label>
+                                    <input type="tel" id="solicitorPhone" name="solicitorPhone" class="form-input" placeholder="01234 567890">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- If NO - show quote calculator option -->
+                        <div id="solicitorQuoteSection" style="display: none;">
+                            <div style="background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                                <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">Get a Conveyancing Quote</h3>
+                                <p style="font-size: 0.875rem; opacity: 0.9; line-height: 1.6; margin-bottom: 1.5rem;">
+                                    We've partnered with approved solicitors who specialize in new build conveyancing for this development. Get competitive quotes instantly and book your conveyancer today.
+                                </p>
+                                
+                                <div style="background: rgba(255,255,255,0.15); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                                    <div style="display: flex; align-items: start; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                        <span style="font-size: 1.25rem;">✓</span>
+                                        <span style="font-size: 0.875rem;">Developer-approved firms</span>
+                                    </div>
+                                    <div style="display: flex; align-items: start; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                        <span style="font-size: 1.25rem;">✓</span>
+                                        <span style="font-size: 0.875rem;">New build specialists</span>
+                                    </div>
+                                    <div style="display: flex; align-items: start; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                        <span style="font-size: 1.25rem;">✓</span>
+                                        <span style="font-size: 0.875rem;">Competitive fixed fees</span>
+                                    </div>
+                                    <div style="display: flex; align-items: start; gap: 0.75rem;">
+                                        <span style="font-size: 1.25rem;">✓</span>
+                                        <span style="font-size: 0.875rem;">Instant online quotes</span>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="btn" onclick="openQuoteCalculator()" style="background: white; color: var(--primary-red); width: 100%; padding: 1rem; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; border-radius: 8px;">
+                                    🧮 Get Instant Quote from Approved Solicitors
+                                </button>
+                                
+                                <p style="font-size: 0.75rem; opacity: 0.8; text-align: center; margin-top: 1rem; font-style: italic;">
+                                    💡 Optional: You can skip this and provide solicitor details later
+                                </p>
                             </div>
 
-                            <div class="form-group">
-                                <label class="form-label" for="solicitorPhone">Phone Number *</label>
-                                <input type="tel" id="solicitorPhone" name="solicitorPhone" class="form-input">
+                            <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                                <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.75rem;">Or provide your own solicitor details:</h4>
+                                <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1rem;">
+                                    If you'd prefer to use a solicitor not listed in our panel, you can provide their details below.
+                                </p>
+                                <button type="button" class="btn btn-secondary" onclick="showOwnSolicitorFields()" style="width: 100%;">
+                                    📝 I'll provide my own solicitor details
+                                </button>
+                            </div>
+
+                            <!-- Hidden fields for own solicitor (shown when user clicks button above) -->
+                            <div id="ownSolicitorFields" style="display: none;">
+                                <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--primary-red);">Your Solicitor Details</h4>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="ownSolicitorFirm">Solicitor Firm Name *</label>
+                                    <input type="text" id="ownSolicitorFirm" name="ownSolicitorFirm" class="form-input" placeholder="e.g. Smith & Partners Solicitors">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="ownSolicitorContact">Contact Person Name *</label>
+                                    <input type="text" id="ownSolicitorContact" name="ownSolicitorContact" class="form-input" placeholder="e.g. Jane Smith">
+                                </div>
+
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label class="form-label" for="ownSolicitorEmail">Email Address *</label>
+                                        <input type="email" id="ownSolicitorEmail" name="ownSolicitorEmail" class="form-input" placeholder="jane.smith@solicitors.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="ownSolicitorPhone">Phone Number *</label>
+                                        <input type="tel" id="ownSolicitorPhone" name="ownSolicitorPhone" class="form-input" placeholder="01234 567890">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
-                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">← Back to Source of Funds</button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue to Payment →</button>
                         </div>
                     </div>
 
@@ -576,41 +710,123 @@
                             <div style="font-size: 0.875rem; opacity: 0.9; margin-bottom: 0.5rem;">Reservation Fee</div>
                             <div style="font-size: 3rem; font-weight: 700;" id="reservationFee">£2,000</div>
                             <div style="font-size: 0.875rem; opacity: 0.9; margin-top: 0.5rem;">Deducted from purchase price at completion</div>
+                            <div style="font-size: 0.75rem; opacity: 0.7; margin-top: 0.75rem; font-style: italic;">Fee set by developer and may vary by plot</div>
+                            <div style="font-size: 0.75rem; opacity: 0.8; margin-top: 0.5rem; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.2);">
+                                📄 VAT: £<span id="vatAmount">400.00</span> (20%) | Total inc. VAT: £<span id="totalWithVat">2,400.00</span>
+                            </div>
                         </div>
 
                         <div style="margin-bottom: 2rem;">
                             <h3 style="font-weight: 600; margin-bottom: 1rem;">Select Payment Method</h3>
                             
-                            <div class="payment-method selected" onclick="selectPayment('card')">
+                            <div class="payment-method selected" id="paymentCard" onclick="selectPaymentMethod('card')">
                                 <div style="display: flex; align-items: center; gap: 1rem;">
                                     <div style="font-size: 2rem;">💳</div>
-                                    <div>
-                                        <div style="font-weight: 600;">Debit/Credit Card</div>
-                                        <div style="font-size: 0.875rem; color: var(--gray-600);">Instant confirmation</div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600;">Card Payment</div>
+                                        <div style="font-size: 0.875rem; color: var(--gray-600);">Instant confirmation - Secure payment processing</div>
                                     </div>
+                                    <div class="payment-check" style="width: 24px; height: 24px; border-radius: 50%; background: var(--primary-red); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem;">✓</div>
                                 </div>
                             </div>
 
-                            <div class="payment-method" onclick="selectPayment('bank')">
+                            <div class="payment-method" id="paymentBank" onclick="selectPaymentMethod('bank')">
                                 <div style="display: flex; align-items: center; gap: 1rem;">
                                     <div style="font-size: 2rem;">🏦</div>
-                                    <div>
+                                    <div style="flex: 1;">
                                         <div style="font-weight: 600;">Bank Transfer</div>
-                                        <div style="font-size: 0.875rem; color: var(--gray-600);">1-3 business days</div>
+                                        <div style="font-size: 0.875rem; color: var(--gray-600);">Direct to developer account - 1-3 business days</div>
                                     </div>
+                                    <div class="payment-check" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--gray-300); display: none;"></div>
                                 </div>
                             </div>
                         </div>
 
-                        <div style="background: var(--gray-50); padding: 1rem; border-radius: 8px; margin-bottom: 2rem; text-align: center;">
-                            <p style="font-size: 0.875rem; color: var(--gray-700);">
-                                🔒 Secure payment powered by Stripe • Your payment information is encrypted and secure
-                            </p>
+                        <!-- Card Payment Details (shown by default) -->
+                        <div id="cardPaymentSection" style="display: block;">
+                            <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                                <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">Card Payment</h4>
+                                <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1.5rem;">
+                                    Your payment will be processed securely through our payment partner. All card details are encrypted and we never store your full card information.
+                                </p>
+                                
+                                <!-- Payment Gateway Integration Placeholder -->
+                                <div id="paymentGatewayContainer" style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--gray-200);">
+                                    <div style="text-align: center; padding: 2rem; color: var(--gray-500);">
+                                        <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+                                        <p style="font-size: 0.875rem; margin-bottom: 0.5rem;"><strong>Secure Payment Gateway</strong></p>
+                                        <p style="font-size: 0.75rem;">Payment form will load here (Stripe, GoCardless, or configured provider)</p>
+                                    </div>
+                                </div>
+                                
+                                <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--gray-200);">
+                                    <span style="font-size: 0.75rem; color: var(--gray-600);">Secured by:</span>
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 25'%3E%3Ctext x='0' y='15' font-family='Arial' font-size='12' fill='%235469d4'%3EStripe%3C/text%3E%3C/svg%3E" alt="Stripe" style="height: 20px;">
+                                    <span style="color: var(--gray-300);">|</span>
+                                    <div style="font-size: 0.75rem; color: var(--gray-600);">256-bit SSL encryption</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bank Transfer Details (hidden by default) -->
+                        <div id="bankTransferSection" style="display: none;">
+                            <div style="background: #FFF3CD; border-left: 4px solid #FFC107; padding: 1.5rem; border-radius: 4px; margin-bottom: 1.5rem;">
+                                <div style="display: flex; gap: 1rem; align-items: start;">
+                                    <div style="font-size: 1.5rem;">⚠️</div>
+                                    <div>
+                                        <strong style="display: block; margin-bottom: 0.5rem;">Important: Payment Reference Required</strong>
+                                        <p style="font-size: 0.875rem; color: #856404; margin: 0;">
+                                            Please use the reference number provided below when making your payment. This ensures your reservation is processed correctly.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                                <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">Developer Bank Account Details</h4>
+                                
+                                <div style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--gray-200); margin-bottom: 1rem;">
+                                    <div style="display: grid; gap: 1rem; font-size: 0.875rem;">
+                                        <div>
+                                            <div style="color: var(--gray-600); margin-bottom: 0.25rem;">Account Name:</div>
+                                            <div style="font-weight: 600; font-size: 1rem;" id="bankAccountName">Developer Trust Account</div>
+                                        </div>
+                                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                                            <div>
+                                                <div style="color: var(--gray-600); margin-bottom: 0.25rem;">Sort Code:</div>
+                                                <div style="font-weight: 600; font-family: monospace; font-size: 1.125rem;" id="bankSortCode">12-34-56</div>
+                                            </div>
+                                            <div>
+                                                <div style="color: var(--gray-600); margin-bottom: 0.25rem;">Account Number:</div>
+                                                <div style="font-weight: 600; font-family: monospace; font-size: 1.125rem;" id="bankAccountNumber">12345678</div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div style="color: var(--gray-600); margin-bottom: 0.25rem;">Payment Reference:</div>
+                                            <div style="font-weight: 700; font-family: monospace; font-size: 1.25rem; color: var(--primary-red); padding: 0.5rem; background: #FFF3CD; border-radius: 4px;" id="paymentReference">REF-XXXX-XXXX</div>
+                                            <p style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.5rem; font-style: italic;">
+                                                ⚠️ You must include this reference with your payment
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button onclick="copyBankDetails()" class="btn btn-secondary" style="width: 100%;">
+                                    📋 Copy Bank Details to Clipboard
+                                </button>
+                            </div>
+
+                            <div style="background: #E8F5E9; border: 1px solid #4CAF50; padding: 1rem; border-radius: 8px;">
+                                <p style="font-size: 0.875rem; color: #2E7D32; margin: 0;">
+                                    <strong>📌 Next Steps:</strong> Once you've made the bank transfer, continue to the next step to sign the agreement. 
+                                    Your reservation will be confirmed once we receive your payment (typically 1-3 business days).
+                                </p>
+                            </div>
                         </div>
 
                         <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
-                            <button type="button" class="btn btn-primary" onclick="nextStep()">Proceed to Sign Agreement</button>
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">← Back to Solicitor Details</button>
+                            <button type="button" class="btn btn-primary" onclick="proceedToAgreement()">Proceed to Agreement →</button>
                         </div>
                     </div>
 
@@ -618,44 +834,196 @@
                     <div class="wizard-content form-section" data-section="5">
                         <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Reservation Agreement & Signature</h2>
                         
-                        <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; max-height: 300px; overflow-y: auto; border: 1px solid var(--gray-200);">
-                            <h3 style="font-weight: 600; margin-bottom: 1rem;">Terms & Conditions</h3>
-                            <p style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-bottom: 1rem;">
-                                By signing this reservation agreement, you agree to reserve the property at <span id="agreementPlot"></span> for the purchase price shown. 
-                                The reservation fee is non-refundable except in the following circumstances:
+                        <!-- Multiple Buyers Section -->
+                        <div style="background: linear-gradient(135deg, rgba(211, 47, 47, 0.05) 0%, rgba(211, 47, 47, 0.1) 100%); border: 2px solid var(--primary-red); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                            <h3 style="font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 1.5rem;">👥</span>
+                                Buyers for this Reservation
+                            </h3>
+                            
+                            <p style="font-size: 0.875rem; color: var(--gray-700); margin-bottom: 1.5rem;">
+                                If you're purchasing with other people (up to 4 buyers total), add them below. All buyers will need to review and sign the agreement.
                             </p>
-                            <ul style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-left: 1.5rem;">
-                                <li>The developer withdraws the property from sale</li>
-                                <li>Unsatisfactory survey results</li>
-                                <li>Mortgage application rejection (with DIP evidence)</li>
-                                <li>Material defects discovered during conveyancing</li>
-                            </ul>
-                            <p style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-top: 1rem;">
-                                The reservation period is 28 days, during which time you must instruct a solicitor and exchange contracts. 
-                                The developer will remove the property from the market during this period.
+
+                            <div id="buyersContainer">
+                                <!-- Buyer 1 (Primary - from Step 1) -->
+                                <div class="buyer-entry" data-buyer="1">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                        <h4 style="font-weight: 600; color: var(--primary-red);">Buyer 1 (You)</h4>
+                                        <span class="status-badge status-success" style="font-size: 0.75rem;">Primary</span>
+                                    </div>
+                                    <div style="background: white; padding: 1rem; border-radius: 8px; border: 1px solid var(--gray-200);">
+                                        <div style="font-weight: 600; margin-bottom: 0.25rem;" id="buyer1Name">-</div>
+                                        <div style="font-size: 0.875rem; color: var(--gray-600);" id="buyer1Email">-</div>
+                                    </div>
+                                </div>
+
+                                <!-- Additional buyers will be added here -->
+                            </div>
+
+                            <button type="button" class="btn btn-secondary" onclick="addBuyer()" id="addBuyerBtn" style="width: 100%; margin-top: 1rem;">
+                                ➕ Add Another Buyer
+                            </button>
+                            <p style="font-size: 0.75rem; color: var(--gray-600); text-align: center; margin-top: 0.5rem;">
+                                You can add up to 3 additional buyers (4 total)
                             </p>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Your Signature *</label>
-                            <div class="signature-pad" id="signaturePad">
-                                <canvas id="signatureCanvas"></canvas>
+                        <!-- Terms & Conditions Section -->
+                        <div style="background: var(--gray-50); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <h3 style="font-weight: 600; margin: 0;">Terms & Conditions</h3>
+                                <div id="tcSourceBadge" style="font-size: 0.75rem; padding: 0.25rem 0.75rem; background: var(--gray-200); border-radius: 12px; font-weight: 600;">
+                                    Platform Standard
+                                </div>
                             </div>
-                            <div class="signature-actions">
-                                <button type="button" class="btn btn-secondary btn-small" onclick="clearSignature()">Clear Signature</button>
+
+                            <!-- T&C Content Container -->
+                            <div id="tcContainer" style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; max-height: 400px; overflow-y: auto; border: 1px solid var(--gray-200);">
+                                <!-- Standard T&Cs (will be replaced if developer uploaded custom) -->
+                                <div id="standardTCs">
+                                    <h4 style="font-weight: 600; margin-bottom: 1rem; font-size: 1rem;">New Home Reservation Agreement</h4>
+                                    <p style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-bottom: 1rem;">
+                                        By signing this reservation agreement, you agree to reserve the property at <span id="agreementPlot"></span> for the purchase price shown. 
+                                        The reservation fee is non-refundable except in the following circumstances:
+                                    </p>
+                                    <ul style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-left: 1.5rem;">
+                                        <li>The developer withdraws the property from sale</li>
+                                        <li>Unsatisfactory survey results (full structural survey)</li>
+                                        <li>Mortgage application rejection (with Decision in Principle evidence)</li>
+                                        <li>Material defects discovered during conveyancing</li>
+                                        <li>Adverse environmental or legal searches</li>
+                                    </ul>
+                                    <p style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-top: 1rem; margin-bottom: 1rem;">
+                                        The reservation period is 28 days from the date of signing, during which time you must instruct a solicitor and work towards exchange of contracts. 
+                                        The developer will remove the property from the market during this period.
+                                    </p>
+                                    <p style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-bottom: 1rem;">
+                                        <strong>Your Obligations:</strong>
+                                    </p>
+                                    <ul style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-left: 1.5rem;">
+                                        <li>Provide proof of funds within 7 days</li>
+                                        <li>Instruct a solicitor within 7 days</li>
+                                        <li>Respond to developer and solicitor communications within 48 hours</li>
+                                        <li>Work diligently towards exchange of contracts</li>
+                                    </ul>
+                                    <p style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-top: 1rem;">
+                                        All buyers named in this agreement must sign this document. The reservation will be valid once all signatures are collected.
+                                    </p>
+                                </div>
+
+                                <!-- Custom T&Cs placeholder (will be loaded if developer uploaded) -->
+                                <div id="customTCs" style="display: none;">
+                                    <div id="customTCContent"></div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 1rem; align-items: center;">
+                                <button type="button" onclick="downloadTCs()" class="btn btn-secondary">
+                                    ⬇️ Download T&Cs (PDF)
+                                </button>
+                                <div style="flex: 1; text-align: right; font-size: 0.75rem; color: var(--gray-600);">
+                                    Last updated: <span id="tcLastUpdated">9 December 2025</span>
+                                </div>
                             </div>
                         </div>
 
+                        <!-- Signature Method Selection -->
+                        <div style="background: var(--gray-50); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">Signature Method</h3>
+                            <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1.5rem;">
+                                Choose how all buyers will sign this agreement:
+                            </p>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div class="signature-method-card selected" id="methodDocuSign" onclick="selectSignatureMethod('docusign')">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📝</div>
+                                    <div style="font-weight: 600; margin-bottom: 0.25rem;">DocuSign</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-600);">Industry standard e-signature</div>
+                                    <div class="signature-check">✓</div>
+                                </div>
+
+                                <div class="signature-method-card" id="methodCanvas" onclick="selectSignatureMethod('canvas')">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">✍️</div>
+                                    <div style="font-weight: 600; margin-bottom: 0.25rem;">Draw Signature</div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-600);">Sign on screen now</div>
+                                    <div class="signature-check" style="display: none;">✓</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DocuSign Section (shown by default) -->
+                        <div id="docuSignSection" style="display: block;">
+                            <div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(34, 197, 94, 0.1) 100%); border: 2px solid var(--success-green); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                                <div style="display: flex; gap: 1rem; align-items: start;">
+                                    <div style="font-size: 2.5rem;">📧</div>
+                                    <div style="flex: 1;">
+                                        <h4 style="font-weight: 600; margin-bottom: 0.5rem;">DocuSign E-Signature</h4>
+                                        <p style="font-size: 0.875rem; color: var(--gray-700); margin-bottom: 1rem;">
+                                            When you proceed, all buyers will receive an email from DocuSign to review and electronically sign the agreement. 
+                                            The process is secure, legally binding, and typically takes 2-5 minutes per person.
+                                        </p>
+
+                                        <div style="background: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                            <div style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem;">Buyers to Sign:</div>
+                                            <div id="docuSignBuyersList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                                <!-- Will be populated with buyer info -->
+                                            </div>
+                                        </div>
+
+                                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; font-size: 0.75rem; color: var(--gray-700);">
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <span style="color: var(--success-green); font-size: 1rem;">✓</span>
+                                                <span>Legally Binding</span>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <span style="color: var(--success-green); font-size: 1rem;">✓</span>
+                                                <span>Audit Trail</span>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <span style="color: var(--success-green); font-size: 1rem;">✓</span>
+                                                <span>Secure & Encrypted</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="background: #FFF9E6; border: 1px solid #F59E0B; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+                                <p style="font-size: 0.875rem; color: #92400E; margin: 0;">
+                                    💡 <strong>Note:</strong> You'll be redirected to DocuSign to complete the signature process. 
+                                    The reservation will be confirmed once all buyers have signed.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Canvas Signature Section (hidden by default) -->
+                        <div id="canvasSignatureSection" style="display: none;">
+                            <div style="background: var(--gray-50); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                                <h4 style="font-weight: 600; margin-bottom: 1rem;">All Buyers Must Sign Below</h4>
+                                <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1.5rem;">
+                                    Each buyer must draw their signature in their designated area. You can clear and redraw if needed.
+                                </p>
+
+                                <div id="canvasSignaturesContainer">
+                                    <!-- Signature pads for each buyer will be generated here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Agreement Checkbox -->
                         <div class="form-group">
                             <label class="checkbox-label">
                                 <input type="checkbox" id="agreeTerms" required>
-                                <span>I have read and agree to the terms and conditions *</span>
+                                <span>All buyers have read and agree to the terms and conditions *</span>
                             </label>
                         </div>
 
                         <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
-                            <button type="button" class="btn btn-primary btn-large" onclick="submitReservation()">Complete Reservation</button>
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">← Back to Payment</button>
+                            <button type="button" class="btn btn-primary btn-large" onclick="submitReservation()">
+                                <span id="submitButtonText">Send for DocuSign</span>
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -664,6 +1032,10 @@
     </div>
 
     <script src="../auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
     <script src="reserve.js"></script>
+    <script src="reserve-solicitor.js"></script>
+    <script src="reserve-payment.js"></script>
+    <script src="reserve-agreement.js"></script>
 </body>
 </html>

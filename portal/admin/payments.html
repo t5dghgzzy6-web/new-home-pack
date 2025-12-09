@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment History - Admin Portal | New Home Pack</title>
+    <link rel="stylesheet" href="../portal.css">
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Sidebar -->
+        <aside class="portal-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="40" height="40" viewBox="0 0 200 200">
+                        <rect x="50" y="80" width="100" height="90" fill="#D32F2F" stroke="#1a1a1a" stroke-width="4"/>
+                        <polygon points="100,30 40,80 160,80" fill="#C62828" stroke="#1a1a1a" stroke-width="4"/>
+                        <rect x="75" y="120" width="20" height="30" fill="#1a1a1a"/>
+                        <rect x="110" y="100" width="15" height="15" fill="#fff" opacity="0.9"/>
+                        <rect x="130" y="100" width="15" height="15" fill="#fff" opacity="0.9"/>
+                    </svg>
+                    <h1>Admin Dashboard</h1>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="payments.html" class="nav-link active">
+                    <span class="nav-icon">💳</span>
+                    <span class="nav-text">Payments</span>
+                </a>
+                <a href="reservations.html" class="nav-link">
+                    <span class="nav-icon">📝</span>
+                    <span class="nav-text">Reservations</span>
+                </a>
+                <a href="developments.html" class="nav-link">
+                    <span class="nav-icon">🏘️</span>
+                    <span class="nav-text">Developments</span>
+                </a>
+                <a href="users.html" class="nav-link">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-text">Users</span>
+                </a>
+                <a href="reports.html" class="nav-link">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Reports</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="user-avatar">A</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Admin User</div>
+                        <div class="user-role">Administrator</div>
+                    </div>
+                </div>
+                <a href="#" onclick="logout()" class="btn btn-secondary btn-small" style="width: 100%; margin-top: 1rem;">Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="portal-main">
+            <header class="portal-header">
+                <div>
+                    <h1 class="page-title">Payment History</h1>
+                    <p class="page-subtitle">View all reservation fee payments and transactions</p>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button onclick="exportPayments()" class="btn btn-secondary">
+                        📥 Export CSV
+                    </button>
+                    <button onclick="refreshPayments()" class="btn btn-primary">
+                        🔄 Refresh
+                    </button>
+                </div>
+            </header>
+
+            <!-- Summary Cards -->
+            <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);">💰</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Total Received</div>
+                        <div class="stat-value" id="totalReceived">£0.00</div>
+                        <div class="stat-change positive">All-time</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);">📊</div>
+                    <div class="stat-content">
+                        <div class="stat-label">This Month</div>
+                        <div class="stat-value" id="monthlyTotal">£0.00</div>
+                        <div class="stat-change" id="monthlyChange">+0%</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #FFC107 0%, #FFA000 100%);">⏳</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Pending</div>
+                        <div class="stat-value" id="pendingTotal">£0.00</div>
+                        <div class="stat-change" id="pendingCount">0 transfers</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%);">🧾</div>
+                    <div class="stat-content">
+                        <div class="stat-label">VAT Collected</div>
+                        <div class="stat-value" id="vatCollected">£0.00</div>
+                        <div class="stat-change">20% rate</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card" style="margin-bottom: 2rem;">
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: end;">
+                    <div class="form-group" style="flex: 1; min-width: 200px;">
+                        <label class="form-label" for="filterStatus">Status</label>
+                        <select id="filterStatus" class="form-input" onchange="filterPayments()">
+                            <option value="all">All Statuses</option>
+                            <option value="succeeded">Completed</option>
+                            <option value="pending-bank-transfer">Pending (Bank Transfer)</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 1; min-width: 200px;">
+                        <label class="form-label" for="filterMethod">Payment Method</label>
+                        <select id="filterMethod" class="form-input" onchange="filterPayments()">
+                            <option value="all">All Methods</option>
+                            <option value="card">Card Payment</option>
+                            <option value="bank">Bank Transfer</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 1; min-width: 200px;">
+                        <label class="form-label" for="searchTerm">Search</label>
+                        <input type="text" id="searchTerm" class="form-input" placeholder="Receipt ID, name, plot..." onkeyup="filterPayments()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payments Table -->
+            <div class="card">
+                <div id="paymentsTableContainer">
+                    <!-- Table will be rendered here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../auth.js"></script>
+    <script>
+        // Enforce admin/developer/sales access only
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = getCurrentUser();
+            if (!user) {
+                window.location.href = '../login.html';
+                return;
+            }
+            
+            // Only allow admin, developer, and sales roles to access this page
+            const allowedRoles = ['admin', 'developer', 'sales'];
+            if (!allowedRoles.includes(user.role)) {
+                alert('Access denied. This area is for administrators only. Redirecting to your dashboard...');
+                redirectToDashboard(user.role);
+                return;
+            }
+            
+            // Update user name in sidebar
+            if (document.getElementById('userName')) {
+                document.getElementById('userName').textContent = user.name;
+            }
+        });
+    </script>
+    <script src="payments.js"></script>
+</body>
+</html>

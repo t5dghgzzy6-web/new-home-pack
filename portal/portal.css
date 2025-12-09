@@ -482,6 +482,311 @@
     gap: var(--spacing-sm);
 }
 
+/* Mortgage Offer Components */
+.mortgage-offer-card,
+.mortgage-dip-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.mortgage-offer-card:hover,
+.mortgage-dip-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.offer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.offer-details-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: var(--gray-50);
+    border-radius: 8px;
+}
+
+.detail-item {
+    text-align: center;
+}
+
+.detail-label {
+    font-size: 0.75rem;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+.detail-value {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--primary-black);
+}
+
+.offer-conditions {
+    background: #FFF9E6;
+    border-left: 4px solid #F59E0B;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    border-radius: 4px;
+}
+
+.offer-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-lg);
+}
+
+.offer-footer {
+    display: flex;
+    justify-content: space-between;
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--gray-200);
+}
+
+.lender-badge {
+    background: var(--gray-100);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--primary-black);
+    transition: all 0.2s;
+}
+
+.lender-badge:hover {
+    background: var(--gray-200);
+    transform: translateY(-2px);
+}
+
+.connection-type-btn {
+    background: white;
+    border: 2px solid var(--gray-300);
+    border-radius: 12px;
+    padding: var(--spacing-lg);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.connection-type-btn:hover {
+    border-color: var(--primary-red);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(211, 47, 47, 0.15);
+}
+
+.connection-type-btn.selected {
+    border-color: var(--primary-red);
+    background: rgba(211, 47, 47, 0.05);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-success {
+    background: rgba(34, 197, 94, 0.1);
+    color: #15803d;
+}
+
+.status-warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: #b45309;
+}
+
+.status-error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #b91c1c;
+}
+
+.status-gray {
+    background: var(--gray-100);
+    color: var(--gray-700);
+}
+
+.offer-detail-section {
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.offer-detail-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.offer-detail-section h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    color: var(--primary-black);
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+    font-size: 0.875rem;
+}
+
+.detail-grid .detail-label {
+    font-weight: 600;
+    color: var(--gray-700);
+    text-transform: none;
+    display: inline;
+}
+
+/* Signature Method Cards */
+.signature-method-card {
+    background: white;
+    border: 2px solid var(--gray-300);
+    border-radius: 12px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    position: relative;
+}
+
+.signature-method-card:hover {
+    border-color: var(--primary-red);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(211, 47, 47, 0.15);
+}
+
+.signature-method-card.selected {
+    border-color: var(--primary-red);
+    background: rgba(211, 47, 47, 0.05);
+}
+
+.signature-check {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--primary-red);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: bold;
+}
+
+.signature-method-card:not(.selected) .signature-check {
+    display: none;
+}
+
+/* Buyer Entry Cards */
+.buyer-entry {
+    margin-bottom: 1.5rem;
+}
+
+.buyer-entry:last-child {
+    margin-bottom: 0;
+}
+
+.canvas-signature-pad {
+    border: 2px solid var(--gray-300);
+    border-radius: 8px;
+    background: white;
+    margin-bottom: 1rem;
+}
+
+.canvas-signature-pad canvas {
+    width: 100%;
+    height: 150px;
+    cursor: crosshair;
+    border-radius: 6px;
+}
+
+.signature-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+/* DocuSign Buyer Item */
+.docusign-buyer-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: var(--gray-50);
+    border-radius: 6px;
+}
+
+.docusign-buyer-item .buyer-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--primary-red);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+}
+
+.docusign-buyer-item .buyer-info {
+    flex: 1;
+}
+
+.docusign-buyer-item .buyer-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-bottom: 0.125rem;
+}
+
+.docusign-buyer-item .buyer-email {
+    font-size: 0.75rem;
+    color: var(--gray-600);
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .dashboard {
@@ -502,5 +807,21 @@
     
     .role-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .offer-details-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .offer-actions {
+        flex-direction: column;
+    }
+    
+    .offer-actions .btn {
+        width: 100%;
     }
 }

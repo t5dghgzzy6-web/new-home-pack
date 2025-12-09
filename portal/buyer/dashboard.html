@@ -101,9 +101,9 @@
                     <a href="#" onclick="alert('Saved plots feature coming soon!'); return false;" class="form-link">View saved →</a>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">Downloaded Packs</div>
-                    <div class="stat-value">5</div>
-                    <a href="#" onclick="alert('Downloaded packs feature coming soon!'); return false;" class="form-link">View packs →</a>
+                    <div class="stat-label">Mortgage Offers</div>
+                    <div class="stat-value" id="mortgageOfferCount">0</div>
+                    <a href="mortgage.html" class="form-link">View offers →</a>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Upcoming Viewings</div>
@@ -254,18 +254,6 @@
     </div>
 
     <script src="../auth.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const user = checkAuth();
-            if (!user) return;
-
-            if (document.getElementById('userName')) {
-                document.getElementById('userName').textContent = user.name;
-            }
-            if (document.getElementById('welcomeName')) {
-                document.getElementById('welcomeName').textContent = user.name.split(' ')[0];
-            }
-        });
-    </script>
+    <script src="dashboard.js"></script>
 </body>
 </html>

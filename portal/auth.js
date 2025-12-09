@@ -51,16 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 
-                // Show role selection or redirect
-                if (email === 'developer@demo.com') {
-                    window.location.href = 'developer/dashboard.html';
-                } else if (email === 'sales@demo.com') {
-                    window.location.href = 'sales/dashboard.html';
-                } else if (email === 'solicitor@demo.com') {
-                    window.location.href = 'solicitor/dashboard.html';
-                } else if (email === 'buyer@demo.com') {
-                    window.location.href = 'buyer/dashboard.html';
-                }
+                // Redirect to appropriate dashboard based on role
+                redirectToDashboard(user.role);
             } else {
                 alert('Invalid credentials. Try:\nbuyer@demo.com / demo123\ndeveloper@demo.com / demo123\nsales@demo.com / demo123\nsolicitor@demo.com / demo123');
             }
@@ -75,17 +67,38 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData(signupForm);
             const data = Object.fromEntries(formData);
             
+            // Store the new user (in production, this would be an API call)
+            const newUser = {
+                email: data.email,
+                name: `${data.firstName} ${data.lastName}`,
+                role: data.accountType,
+                company: data.company,
+                phone: data.phone,
+                createdAt: new Date().toISOString(),
+                id: 'user_' + Date.now()
+            };
+            
             // Get redirect parameters
             const urlParams = new URLSearchParams(window.location.search);
             const plotId = urlParams.get('plot');
             const action = urlParams.get('action');
-
-            // For MVP, just redirect to login with same parameters
-            alert('Account created! Please login with your credentials.');
-            if (plotId && action) {
-                window.location.href = `login.html?plot=${plotId}&action=${action}`;
+            
+            // Store user in session
+            sessionStorage.setItem('nhp_user', JSON.stringify(newUser));
+            
+            // Store in local registry for demo purposes
+            const users = JSON.parse(localStorage.getItem('nhp_registered_users') || '[]');
+            users.push(newUser);
+            localStorage.setItem('nhp_registered_users', JSON.stringify(users));
+            
+            // Redirect based on user type and any pending actions
+            if (plotId && action === 'download') {
+                window.location.href = `../plot-detail.html?id=${plotId}&autodownload=true`;
+            } else if (plotId && action === 'reserve') {
+                window.location.href = `buyer/reserve.html?plot=${plotId}`;
             } else {
-                window.location.href = 'login.html';
+                // Redirect to appropriate dashboard based on account type
+                redirectToDashboard(data.accountType);
             }
         });
     }
@@ -99,6 +112,39 @@ function checkAuth() {
         return null;
     }
     return user;
+}
+
+// Check authentication with role requirement
+function checkAuthWithRole(requiredRole) {
+    const user = getCurrentUser();
+    if (!user) {
+        window.location.href = '../login.html';
+        return null;
+    }
+    
+    // Check if user has the required role
+    if (user.role !== requiredRole) {
+        // Redirect to their correct dashboard
+        alert(`Access denied. This area is for ${requiredRole}s only. Redirecting to your dashboard...`);
+        redirectToDashboard(user.role);
+        return null;
+    }
+    
+    return user;
+}
+
+// Redirect to appropriate dashboard based on role
+function redirectToDashboard(role) {
+    const dashboardMap = {
+        'buyer': 'buyer/dashboard.html',
+        'developer': 'developer/dashboard.html',
+        'sales': 'sales/dashboard.html',
+        'solicitor': 'solicitor/dashboard.html',
+        'admin': 'admin/payments.html'
+    };
+    
+    const dashboard = dashboardMap[role] || 'buyer/dashboard.html';
+    window.location.href = dashboard;
 }
 
 // Get current user

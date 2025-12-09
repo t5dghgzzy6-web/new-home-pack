@@ -4,6 +4,7 @@ let currentStep = 1;
 const totalSteps = 5;
 let signaturePad = null;
 let credasVerified = false; // Track Credas verification status
+let connectedMortgageOffer = null; // Store connected mortgage offer
 
 // Plot data with site plan positions
 const plotsData = {
@@ -14,7 +15,8 @@ const plotsData = {
         type: '4 Bedroom Detached',
         sqft: '1,850',
         status: 'Available',
-        description: 'Premium corner plot with south-facing garden'
+        description: 'Premium corner plot with south-facing garden',
+        reservationFee: 2000
     },
     '2': { 
         number: 'Plot 2', 
@@ -23,7 +25,8 @@ const plotsData = {
         type: '3 Bedroom Semi-Detached',
         sqft: '1,200',
         status: 'Available',
-        description: 'Family home with modern layout'
+        description: 'Family home with modern layout',
+        reservationFee: 1500
     },
     '3': { 
         number: 'Plot 3', 
@@ -32,7 +35,8 @@ const plotsData = {
         type: '2 Bedroom Semi-Detached',
         sqft: '950',
         status: 'Available',
-        description: 'Perfect first home or investment'
+        description: 'Perfect first home or investment',
+        reservationFee: 1000
     },
     '4': { 
         number: 'Plot 4', 
@@ -41,7 +45,8 @@ const plotsData = {
         type: '3 Bedroom Terraced',
         sqft: '1,100',
         status: 'Available',
-        description: 'Modern terrace with low maintenance garden'
+        description: 'Modern terrace with low maintenance garden',
+        reservationFee: 1500
     },
     '5': { 
         number: 'Plot 5', 
@@ -50,7 +55,8 @@ const plotsData = {
         type: '5 Bedroom Detached',
         sqft: '2,400',
         status: 'Available',
-        description: 'Executive home with double garage'
+        description: 'Executive home with double garage',
+        reservationFee: 3000
     }
 };
 
@@ -84,7 +90,138 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Update minimum deposit when loaded
     updateMinDeposit();
+    
+    // Check for connected mortgage offer
+    checkConnectedMortgageOffer();
 });
+
+// Check if user has connected a mortgage offer
+function checkConnectedMortgageOffer() {
+    const storedOffer = localStorage.getItem('nhp_selected_mortgage_offer');
+    
+    if (storedOffer) {
+        try {
+            connectedMortgageOffer = JSON.parse(storedOffer);
+            displayConnectedMortgageOffer();
+        } catch (error) {
+            console.error('Error parsing mortgage offer:', error);
+        }
+    }
+}
+
+// Display connected mortgage offer in Step 2
+function displayConnectedMortgageOffer() {
+    if (!connectedMortgageOffer) return;
+    
+    // Show connected offer section
+    const connectedSection = document.getElementById('connectedMortgageOffer');
+    const noConnectedSection = document.getElementById('noConnectedMortgageOffer');
+    
+    if (connectedSection && noConnectedSection) {
+        connectedSection.style.display = 'block';
+        noConnectedSection.style.display = 'none';
+        
+        // Update offer summary
+        const summaryText = `${connectedMortgageOffer.lender} • £${connectedMortgageOffer.loanAmount.toLocaleString()} • ${connectedMortgageOffer.interestRate}% ${connectedMortgageOffer.rateType}`;
+        document.getElementById('connectedOfferSummary').textContent = summaryText;
+        
+        // Update offer details
+        document.getElementById('offerLoanAmount').textContent = `£${connectedMortgageOffer.loanAmount.toLocaleString()}`;
+        document.getElementById('offerMonthlyPayment').textContent = `£${connectedMortgageOffer.monthlyPayment.toLocaleString()}`;
+        document.getElementById('offerLTV').textContent = `${connectedMortgageOffer.ltv}%`;
+        
+        // Pre-fill mortgage fields with offer data
+        document.getElementById('mortgageLender').value = connectedMortgageOffer.lender;
+        document.getElementById('mortgageAmount').value = connectedMortgageOffer.loanAmount;
+        
+        // Make fields read-only since they're from connected offer
+        document.getElementById('mortgageLender').setAttribute('readonly', 'readonly');
+        document.getElementById('mortgageAmount').setAttribute('readonly', 'readonly');
+        
+        // Hide file upload since we have the offer
+        const fileGroup = document.getElementById('mortgageApproval').closest('.form-group');
+        if (fileGroup) fileGroup.style.display = 'none';
+    }
+}
+
+// Remove connected mortgage offer
+function removeMortgageOffer() {
+    if (confirm('Are you sure you want to disconnect this mortgage offer? You can reconnect it later from the mortgage page.')) {
+        connectedMortgageOffer = null;
+        localStorage.removeItem('nhp_selected_mortgage_offer');
+        
+        // Show no connected offer section
+        document.getElementById('connectedMortgageOffer').style.display = 'none';
+        document.getElementById('noConnectedMortgageOffer').style.display = 'block';
+        
+        // Clear and make fields editable
+        document.getElementById('mortgageLender').value = '';
+        document.getElementById('mortgageAmount').value = '';
+        document.getElementById('mortgageLender').removeAttribute('readonly');
+        document.getElementById('mortgageAmount').removeAttribute('readonly');
+        
+        // Show file upload again
+        const fileGroup = document.getElementById('mortgageApproval').closest('.form-group');
+        if (fileGroup) fileGroup.style.display = 'block';
+    }
+}
+
+// Redirect to mortgage page to connect lender
+function redirectToMortgagePage() {
+    // Store current form data
+    saveFormProgress();
+    
+    // Redirect to mortgage page
+    window.location.href = 'mortgage.html';
+}
+
+// Save form progress to resume later
+function saveFormProgress() {
+    const formData = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        addressLine1: document.getElementById('addressLine1').value,
+        addressLine2: document.getElementById('addressLine2').value,
+        city: document.getElementById('city').value,
+        county: document.getElementById('county').value,
+        postcode: document.getElementById('postcode').value,
+        purchaseType: document.getElementById('purchaseType').value,
+        depositAmount: document.getElementById('depositAmount').value,
+        depositSource: document.getElementById('depositSource').value
+    };
+    
+    localStorage.setItem('nhp_reservation_progress', JSON.stringify(formData));
+}
+
+// Restore form progress
+function restoreFormProgress() {
+    const savedData = localStorage.getItem('nhp_reservation_progress');
+    
+    if (savedData) {
+        try {
+            const formData = JSON.parse(savedData);
+            
+            Object.keys(formData).forEach(key => {
+                const field = document.getElementById(key);
+                if (field && formData[key]) {
+                    field.value = formData[key];
+                }
+            });
+            
+            // Trigger change events to update dependent fields
+            if (formData.purchaseType) {
+                updatePurchaseTypeFields();
+            }
+            if (formData.depositSource) {
+                updateSourceFields();
+            }
+        } catch (error) {
+            console.error('Error restoring form progress:', error);
+        }
+    }
+}
 
 function loadPlotInfo(plotId) {
     const plot = plotsData[plotId] || plotsData['1'];
@@ -99,6 +236,12 @@ function loadPlotInfo(plotId) {
 
     // Update plot details card
     updatePlotDetailsCard(plot);
+    
+    // Update reservation fee
+    if (document.getElementById('reservationFee')) {
+        document.getElementById('reservationFee').textContent = 
+            `£${plot.reservationFee.toLocaleString()}`;
+    }
 
     // Store plot info for later
     sessionStorage.setItem('reservationPlot', JSON.stringify(plot));
@@ -298,11 +441,15 @@ function validateStep(step) {
 
     // Special validation for step 2 (Source of Funds)
     if (step === 2) {
+        // AML verification made optional for testing
+        // In production, uncomment this validation:
+        /*
         if (!credasVerified) {
-            alert('Please complete the Credas AML verification before continuing');
+            alert('Please complete the AML verification before continuing');
             document.getElementById('credasVerifyBtn').focus();
             return false;
         }
+        */
         
         // Validate deposit amount
         const depositAmount = parseFloat(document.getElementById('depositAmount').value);
@@ -396,7 +543,7 @@ function initiateCredasVerification() {
     
     // Disable button
     btn.disabled = true;
-    btn.textContent = '🔄 Connecting to Credas...';
+    btn.textContent = '🔄 Connecting to verification service...';
     
     // Simulate API call
     setTimeout(() => {
@@ -417,13 +564,13 @@ function showCredasMockFlow() {
         <div style="background: white; border-radius: 12px; padding: 2rem; max-width: 500px; width: 90%;">
             <div style="text-align: center; margin-bottom: 1.5rem;">
                 <div style="font-size: 4rem; margin-bottom: 1rem;">🔒</div>
-                <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">Credas Verification</h2>
+                <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">Identity Verification</h2>
                 <p style="color: var(--gray-600); font-size: 0.875rem;">Secure AML & Identity Verification</p>
             </div>
             
             <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
                 <p style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-bottom: 1rem;">
-                    <strong>In production, you would be redirected to Credas to:</strong>
+                    <strong>In production, you would be redirected to our verification partner to:</strong>
                 </p>
                 <ul style="font-size: 0.875rem; line-height: 1.8; color: var(--gray-700); margin-left: 1.5rem;">
                     <li>Verify your identity (passport/driving license)</li>
@@ -435,7 +582,7 @@ function showCredasMockFlow() {
             
             <div style="background: #D4EDDA; border: 1px solid #C3E6CB; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
                 <p style="font-size: 0.875rem; color: #155724; margin: 0;">
-                    <strong>MVP Mode:</strong> Verification simulated. In production, this integrates with Credas API.
+                    <strong>MVP Mode:</strong> Verification simulated. In production, this integrates with a third-party verification API.
                 </p>
             </div>
             
@@ -475,7 +622,7 @@ function completeCredasVerification() {
     // Update button
     btn.disabled = true;
     btn.style.background = 'var(--accent-green)';
-    btn.innerHTML = '✓ Verified with Credas';
+    btn.innerHTML = '✓ Verification Complete';
     
     // Store verification in session
     sessionStorage.setItem('credasVerified', 'true');
@@ -485,7 +632,7 @@ function completeCredasVerification() {
 function cancelCredasVerification() {
     const btn = document.getElementById('credasVerifyBtn');
     btn.disabled = false;
-    btn.textContent = '🔒 Begin Credas Verification';
+    btn.textContent = '🔒 Begin Verification';
 }
 
 function validateAndContinueStep2() {
@@ -619,45 +766,92 @@ function selectPayment(method) {
 }
 
 function submitReservation() {
+    // Validate agreement checkbox
+    if (!document.getElementById('agreeTerms').checked) {
+        showNotification('You must agree to the terms and conditions', 'error');
+        return;
+    }
+
+    // Validate signatures based on selected method
+    if (!validateSignatures()) {
+        return;
+    }
+
+    // Show loading overlay
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+    loadingOverlay.innerHTML = `
+        <div style="background: white; border-radius: 12px; padding: 3rem; text-align: center; max-width: 400px;">
+            <div class="spinner" style="margin: 0 auto 1.5rem; width: 50px; height: 50px; border: 4px solid var(--gray-200); border-top-color: var(--primary-red); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+            <h3 style="font-weight: 600; margin-bottom: 0.5rem;">Processing Reservation...</h3>
+            <p style="font-size: 0.875rem; color: var(--gray-600);">Please wait while we process your reservation</p>
+        </div>
+    `;
+    document.body.appendChild(loadingOverlay);
+
     // Collect form data
     const formData = new FormData(document.getElementById('reservationForm'));
     const data = Object.fromEntries(formData);
     
-    // Add signature
-    if (signaturePad) {
-        data.signature = signaturePad.toDataURL();
-    }
-
     // Get plot info
     const plot = JSON.parse(sessionStorage.getItem('reservationPlot') || '{}');
     data.plot = plot;
 
-    // Get selected payment method
-    const selectedPayment = document.querySelector('.payment-method.selected');
-    data.paymentMethod = selectedPayment ? 
-        (selectedPayment.textContent.includes('Card') ? 'card' : 'bank') : 'card';
+    // Get payment info
+    const receipt = JSON.parse(localStorage.getItem('nhp_last_payment_receipt') || '{}');
+    data.payment = receipt;
 
-    // In production, send to API
-    console.log('Reservation Data:', data);
+    // Get all buyers
+    const primaryName = document.getElementById('firstName')?.value + ' ' + document.getElementById('lastName')?.value;
+    const primaryEmail = document.getElementById('email')?.value;
+    
+    data.buyers = [
+        { number: 1, name: primaryName, email: primaryEmail, role: 'primary' },
+        ...buyers
+    ];
+
+    // Get signatures data
+    const signaturesData = getAllSignaturesData();
+    data.signatures = signaturesData;
+
+    // Add metadata
+    data.reservationDate = new Date().toISOString();
+    data.reservationId = 'RES-' + Date.now();
+    data.status = selectedSignatureMethod === 'docusign' ? 'pending-signatures' : 'pending-payment';
+    data.customTCs = customTCsLoaded;
+
+    // If DocuSign, send to DocuSign
+    if (selectedSignatureMethod === 'docusign') {
+        const envelope = sendToDocuSign(data);
+        data.docuSignEnvelopeId = envelope.envelopeId;
+    }
 
     // Store reservation
     const reservations = JSON.parse(localStorage.getItem('nhp_reservations') || '[]');
-    reservations.push({
-        ...data,
-        reservationDate: new Date().toISOString(),
-        status: 'pending-payment',
-        reservationId: 'RES-' + Date.now()
-    });
+    reservations.push(data);
     localStorage.setItem('nhp_reservations', JSON.stringify(reservations));
 
-    // Show success modal
-    showSuccessModal(plot);
+    // Remove loading overlay
+    setTimeout(() => {
+        loadingOverlay.remove();
+        
+        // Show success modal
+        showSuccessModal(plot, selectedSignatureMethod);
+    }, 2000);
 }
 
-function showSuccessModal(plot) {
+function showSuccessModal(plot, signatureMethod) {
     const modal = document.createElement('div');
     modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;';
     
+    const docuSignMessage = signatureMethod === 'docusign' ? `
+        <div style="background: #E8F5E9; border: 1px solid #4CAF50; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+            <p style="font-size: 0.875rem; color: #2E7D32; margin: 0;">
+                📧 <strong>DocuSign invitations sent!</strong> All buyers will receive an email to review and sign the agreement.
+            </p>
+        </div>
+    ` : '';
+
     modal.innerHTML = `
         <div style="background: white; border-radius: 12px; padding: 3rem; max-width: 500px; width: 90%; text-align: center;">
             <div style="font-size: 5rem; margin-bottom: 1rem;">🎉</div>
@@ -666,20 +860,31 @@ function showSuccessModal(plot) {
                 You've successfully reserved ${plot.number} at ${plot.development}
             </p>
             
+            ${docuSignMessage}
+            
             <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; text-align: left;">
                 <h3 style="font-weight: 600; margin-bottom: 1rem;">What happens next?</h3>
                 <ul style="list-style: none; padding: 0; margin: 0;">
+                    ${signatureMethod === 'docusign' ? `
+                        <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="color: var(--primary-red);">1.</span> All buyers complete DocuSign signature
+                        </li>
+                        <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="color: var(--primary-red);">2.</span> We'll send your signed agreement by email
+                        </li>
+                    ` : `
+                        <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="color: var(--primary-red);">1.</span> We'll send your reservation agreement by email
+                        </li>
+                    `}
                     <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="color: var(--primary-red);">1.</span> We'll send your reservation agreement by email
+                        <span style="color: var(--primary-red);">${signatureMethod === 'docusign' ? '3' : '2'}.</span> Our sales team will contact you within 24 hours
                     </li>
                     <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="color: var(--primary-red);">2.</span> Our sales team will contact you within 24 hours
+                        <span style="color: var(--primary-red);">${signatureMethod === 'docusign' ? '4' : '3'}.</span> You have 28 days to exchange contracts
                     </li>
                     <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="color: var(--primary-red);">3.</span> You have 28 days to exchange contracts
-                    </li>
-                    <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="color: var(--primary-red);">4.</span> Your solicitor will receive all documents
+                        <span style="color: var(--primary-red);">${signatureMethod === 'docusign' ? '5' : '4'}.</span> Your solicitor will receive all documents
                     </li>
                 </ul>
             </div>
@@ -693,3 +898,13 @@ function showSuccessModal(plot) {
     
     document.body.appendChild(modal);
 }
+
+// Add spinner animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+`;
+document.head.appendChild(style);

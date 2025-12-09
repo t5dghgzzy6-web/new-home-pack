@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - New Home Pack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="../portal.css">
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Sidebar -->
+        <aside class="portal-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="40" height="40" viewBox="0 0 200 200">
+                        <rect x="50" y="80" width="100" height="90" fill="#D32F2F" stroke="#1a1a1a" stroke-width="4"/>
+                        <polygon points="100,30 40,80 160,80" fill="#C62828" stroke="#1a1a1a" stroke-width="4"/>
+                        <rect x="75" y="120" width="20" height="30" fill="#1a1a1a"/>
+                        <rect x="110" y="100" width="15" height="15" fill="#fff" opacity="0.9"/>
+                        <rect x="130" y="100" width="15" height="15" fill="#fff" opacity="0.9"/>
+                    </svg>
+                    <h1>Developer Portal</h1>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="plots.html" class="nav-link">
+                    <span class="nav-icon">📍</span>
+                    <span class="nav-text">Manage Plots</span>
+                </a>
+                <a href="reservations.html" class="nav-link">
+                    <span class="nav-icon">📋</span>
+                    <span class="nav-text">Reservations</span>
+                </a>
+                <a href="../admin/payments.html" class="nav-link">
+                    <span class="nav-icon">💳</span>
+                    <span class="nav-text">Payments</span>
+                </a>
+                <a href="settings.html" class="nav-link active">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="user-avatar">D</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Developer</div>
+                        <div class="user-role">Property Developer</div>
+                    </div>
+                </div>
+                <a href="#" onclick="logout()" class="btn btn-secondary btn-small" style="width: 100%; margin-top: 1rem;">Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="portal-main">
+            <header class="portal-header">
+                <div>
+                    <h1 class="page-title">Developer Settings</h1>
+                    <p class="page-subtitle">Configure your reservation process and legal documents</p>
+                </div>
+            </header>
+
+            <!-- Terms & Conditions Settings -->
+            <div class="card" style="margin-bottom: 2rem;">
+                <div style="border-bottom: 1px solid var(--gray-200); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Reservation Agreement Terms & Conditions</h2>
+                    <p style="font-size: 0.875rem; color: var(--gray-600);">
+                        Choose whether to use platform standard T&Cs or upload your own custom terms for reservation agreements.
+                    </p>
+                </div>
+
+                <!-- T&C Type Selection -->
+                <div style="margin-bottom: 2rem;">
+                    <label class="form-label">Select T&C Type</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="tc-type-card selected" id="tcTypeStandard" onclick="selectTCType('standard')">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📄</div>
+                            <div style="font-weight: 600; margin-bottom: 0.25rem;">Platform Standard</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-600);">Use our legally reviewed T&Cs</div>
+                            <div class="tc-check">✓</div>
+                        </div>
+
+                        <div class="tc-type-card" id="tcTypeCustom" onclick="selectTCType('custom')">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📝</div>
+                            <div style="font-weight: 600; margin-bottom: 0.25rem;">Custom T&Cs</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-600);">Upload your own terms</div>
+                            <div class="tc-check" style="display: none;">✓</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Standard T&Cs Preview (shown by default) -->
+                <div id="standardTCSection">
+                    <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <h3 style="font-weight: 600; margin-bottom: 1rem; font-size: 1rem;">Standard T&Cs Preview</h3>
+                        <div style="max-height: 300px; overflow-y: auto; background: white; padding: 1rem; border-radius: 6px; border: 1px solid var(--gray-200); font-size: 0.875rem; line-height: 1.6;">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">New Home Reservation Agreement</h4>
+                            <p>By signing this reservation agreement, you agree to reserve the property for the purchase price shown. The reservation fee is non-refundable except in the following circumstances:</p>
+                            <ul style="margin-left: 1.5rem;">
+                                <li>The developer withdraws the property from sale</li>
+                                <li>Unsatisfactory survey results (full structural survey)</li>
+                                <li>Mortgage application rejection (with Decision in Principle evidence)</li>
+                                <li>Material defects discovered during conveyancing</li>
+                                <li>Adverse environmental or legal searches</li>
+                            </ul>
+                            <p>The reservation period is 28 days from the date of signing, during which time you must instruct a solicitor and work towards exchange of contracts...</p>
+                        </div>
+                    </div>
+
+                    <div style="background: #E8F5E9; border: 1px solid #4CAF50; padding: 1rem; border-radius: 8px;">
+                        <p style="font-size: 0.875rem; color: #2E7D32; margin: 0;">
+                            ✅ <strong>Recommended:</strong> Our standard T&Cs are professionally drafted and regularly updated to comply with UK property law.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Custom T&Cs Upload (hidden by default) -->
+                <div id="customTCSection" style="display: none;">
+                    <div style="background: #FFF9E6; border: 1px solid #F59E0B; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <p style="font-size: 0.875rem; color: #92400E; margin: 0;">
+                            ⚠️ <strong>Important:</strong> Please ensure your custom T&Cs are reviewed by a qualified solicitor and comply with all relevant UK property laws and consumer protection regulations.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Upload Custom T&Cs (PDF or HTML)</label>
+                        <div style="border: 2px dashed var(--gray-300); border-radius: 12px; padding: 2rem; text-align: center; background: var(--gray-50); cursor: pointer;" onclick="document.getElementById('tcFileInput').click()">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📤</div>
+                            <div style="font-weight: 600; margin-bottom: 0.5rem;">Click to upload or drag and drop</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-600);">PDF, HTML, or DOCX (max 5MB)</div>
+                            <input type="file" id="tcFileInput" accept=".pdf,.html,.htm,.docx" style="display: none;" onchange="handleTCFileUpload(event)">
+                        </div>
+                    </div>
+
+                    <div id="uploadedTCPreview" style="display: none; background: var(--gray-50); padding: 1.5rem; border-radius: 8px; margin-top: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                            <div>
+                                <h4 style="font-weight: 600; margin-bottom: 0.25rem;">Uploaded Document</h4>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);" id="uploadedFileName">-</div>
+                            </div>
+                            <button onclick="removeTCFile()" class="btn btn-secondary btn-small">Remove</button>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: 6px; max-height: 200px; overflow-y: auto; border: 1px solid var(--gray-200);" id="tcPreviewContent">
+                            <!-- Preview content -->
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label class="form-label">Last Review Date</label>
+                        <input type="date" id="tcReviewDate" class="form-input" value="2025-12-09">
+                        <p style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.5rem;">
+                            When were these T&Cs last reviewed by a legal professional?
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Solicitor/Firm Name</label>
+                        <input type="text" id="tcSolicitorName" class="form-input" placeholder="e.g. Smith & Partners Solicitors">
+                        <p style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.5rem;">
+                            Name of the solicitor or firm who reviewed these terms
+                        </p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--gray-200); display: flex; gap: 1rem;">
+                    <button onclick="saveTCSettings()" class="btn btn-primary">Save T&C Settings</button>
+                    <button onclick="previewTCs()" class="btn btn-secondary">Preview in Reservation Form</button>
+                </div>
+            </div>
+
+            <!-- DocuSign Integration Settings -->
+            <div class="card">
+                <div style="border-bottom: 1px solid var(--gray-200); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">DocuSign Integration</h2>
+                    <p style="font-size: 0.875rem; color: var(--gray-600);">
+                        Connect your DocuSign account to enable electronic signatures for reservation agreements.
+                    </p>
+                </div>
+
+                <div id="docusignNotConnected">
+                    <div style="background: linear-gradient(135deg, rgba(211, 47, 47, 0.05) 0%, rgba(211, 47, 47, 0.1) 100%); border: 2px solid var(--primary-red); border-radius: 12px; padding: 2rem; text-align: center; margin-bottom: 1.5rem;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
+                        <h3 style="font-weight: 600; margin-bottom: 0.5rem;">DocuSign Not Connected</h3>
+                        <p style="font-size: 0.875rem; color: var(--gray-700); margin-bottom: 1.5rem;">
+                            Connect your DocuSign account to enable legally binding e-signatures
+                        </p>
+                        <button onclick="connectDocuSign()" class="btn btn-primary">Connect DocuSign Account</button>
+                    </div>
+
+                    <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px;">
+                        <h4 style="font-weight: 600; margin-bottom: 1rem; font-size: 0.875rem;">Benefits of DocuSign Integration:</h4>
+                        <ul style="font-size: 0.875rem; line-height: 1.8; color: var(--gray-700);">
+                            <li>✅ Legally binding electronic signatures</li>
+                            <li>✅ Support for multiple buyers (up to 4)</li>
+                            <li>✅ Automatic email notifications to all signers</li>
+                            <li>✅ Complete audit trail and tamper-proof documents</li>
+                            <li>✅ Faster reservation process (typically signed within 24 hours)</li>
+                            <li>✅ Secure document storage and retrieval</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="docusignConnected" style="display: none;">
+                    <div style="background: #E8F5E9; border: 2px solid var(--success-green); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="font-size: 2.5rem;">✅</div>
+                            <div style="flex: 1;">
+                                <h3 style="font-weight: 600; margin-bottom: 0.25rem;">DocuSign Connected</h3>
+                                <p style="font-size: 0.875rem; color: var(--gray-700); margin: 0;">
+                                    Account: <span id="docusignAccountEmail">-</span>
+                                </p>
+                            </div>
+                            <button onclick="disconnectDocuSign()" class="btn btn-secondary">Disconnect</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="requireDocuSign" checked>
+                            <span>Require DocuSign for all reservations</span>
+                        </label>
+                        <p style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.5rem; margin-left: 1.75rem;">
+                            If enabled, all reservations must be signed via DocuSign. If disabled, buyers can choose between DocuSign or drawing signatures.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../auth.js"></script>
+    <script src="settings.js"></script>
+</body>
+</html>

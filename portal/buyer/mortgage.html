@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Mortgage - New Home Pack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="../portal.css">
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Sidebar (reuse from dashboard) -->
+        <aside class="portal-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="40" height="40" viewBox="0 0 200 200">
+                        <rect x="50" y="80" width="100" height="90" fill="#D32F2F" stroke="#1a1a1a" stroke-width="4"/>
+                        <polygon points="100,30 40,80 160,80" fill="#C62828" stroke="#1a1a1a" stroke-width="4"/>
+                        <rect x="75" y="120" width="20" height="30" fill="#1a1a1a"/>
+                        <rect x="110" y="100" width="15" height="15" fill="#fff" opacity="0.9"/>
+                        <rect x="130" y="100" width="15" height="15" fill="#fff" opacity="0.9"/>
+                    </svg>
+                    <h1>Buyer Portal</h1>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="../../plots.html" class="nav-link">
+                    <span class="nav-icon">🔍</span>
+                    <span class="nav-text">Browse Plots</span>
+                </a>
+                <a href="mortgage.html" class="nav-link active">
+                    <span class="nav-icon">💰</span>
+                    <span class="nav-text">My Mortgage</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <span class="nav-icon">📄</span>
+                    <span class="nav-text">Documents</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">Profile</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="user-avatar">B</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Buyer</div>
+                        <div class="user-role">Property Buyer</div>
+                    </div>
+                </div>
+                <a href="#" onclick="logout()" class="btn btn-secondary btn-small" style="width: 100%; margin-top: 1rem;">Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="portal-main">
+            <header class="portal-header">
+                <div>
+                    <h1 class="page-title">My Mortgage</h1>
+                    <p class="page-subtitle">Connect your lender and access mortgage offers</p>
+                </div>
+                <button onclick="showConnectModal()" class="btn btn-primary">
+                    🔗 Connect Lender
+                </button>
+            </header>
+
+            <!-- Connected Offers -->
+            <div id="offersContainer">
+                <!-- Offers will be rendered here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="card" style="text-align: center; padding: 4rem 2rem;">
+                <div style="font-size: 4rem; margin-bottom: 1.5rem;">🏦</div>
+                <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">No Mortgage Offers Yet</h2>
+                <p style="font-size: 1rem; color: var(--gray-600); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+                    Connect to your lender to automatically import your mortgage offers and DIPs. 
+                    We support direct connections to major UK lenders and integration platforms like LMS Lender Exchange.
+                </p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; max-width: 800px; margin: 0 auto 2rem;">
+                    <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; text-align: left;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔗</div>
+                        <h3 style="font-weight: 600; margin-bottom: 0.5rem;">Direct Lender Integration</h3>
+                        <p style="font-size: 0.875rem; color: var(--gray-600);">Connect directly to Nationwide, HSBC, Santander, Barclays, and more</p>
+                    </div>
+                    <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; text-align: left;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+                        <h3 style="font-weight: 600; margin-bottom: 0.5rem;">LMS Integration</h3>
+                        <p style="font-size: 0.875rem; color: var(--gray-600);">Access multiple lender offers through LMS Lender Exchange</p>
+                    </div>
+                    <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; text-align: left;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔄</div>
+                        <h3 style="font-weight: 600; margin-bottom: 0.5rem;">Auto-Sync</h3>
+                        <p style="font-size: 0.875rem; color: var(--gray-600);">Offers automatically update when your lender makes changes</p>
+                    </div>
+                </div>
+
+                <button onclick="showConnectModal()" class="btn btn-primary btn-large">
+                    🔗 Connect Your Lender
+                </button>
+            </div>
+
+            <!-- Supported Lenders -->
+            <div class="card" style="margin-top: 2rem;">
+                <h3 style="font-weight: 600; margin-bottom: 1.5rem;">Supported Lenders & Platforms</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem;">
+                    <div class="lender-badge">LMS Lender Exchange</div>
+                    <div class="lender-badge">Nationwide</div>
+                    <div class="lender-badge">HSBC UK</div>
+                    <div class="lender-badge">Santander</div>
+                    <div class="lender-badge">Barclays</div>
+                    <div class="lender-badge">NatWest</div>
+                    <div class="lender-badge">Lloyds Bank</div>
+                    <div class="lender-badge">Halifax</div>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--gray-600); margin-top: 1.5rem;">
+                    💡 <strong>More lenders being added regularly.</strong> If your lender isn't listed, you can still manually upload your mortgage offer documents.
+                </p>
+            </div>
+        </main>
+    </div>
+
+    <script src="../auth.js"></script>
+    <script src="mortgage-service.js"></script>
+    <script src="mortgage.js"></script>
+</body>
+</html>

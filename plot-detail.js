@@ -375,8 +375,22 @@ function bookViewing(id) {
 
 function reservePlot(id) {
     const plot = plots.find(p => p.id === id);
-    alert(`Reserve ${plot.number} - ${plot.development}\n\nPrice: £${plot.price.toLocaleString()}\n\nTo reserve this plot, you'll need to:\n1. Create an account\n2. Complete the reservation form\n3. Provide source of funds\n4. Pay reservation fee\n\nLet's get started!`);
-    window.location.href = `portal/signup.html?plot=${id}&action=reserve`;
+    
+    // Check if user is logged in
+    const user = getCurrentUser();
+    
+    if (!user) {
+        // Not logged in - redirect to signup/login
+        if (confirm(`To reserve ${plot.number}, please create a free account or sign in.\\n\\nReservation includes:\\n✓ Secure your chosen plot\\n✓ 28-day reservation period\\n✓ Reservation fee: £2,000 (deductible from purchase price)\\n✓ Priority access to our sales team\\n\\nClick OK to create account or Cancel to sign in.`)) {
+            window.location.href = `portal/signup.html?plot=${id}&action=reserve`;
+        } else {
+            window.location.href = `portal/login.html?plot=${id}&action=reserve`;
+        }
+        return;
+    }
+    
+    // User is logged in - go to reservation form
+    window.location.href = `portal/buyer/reserve.html?plot=${id}`;
 }
 
 function loadRelatedPlots(currentPlotId) {

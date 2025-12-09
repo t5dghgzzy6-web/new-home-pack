@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserve Plot - New Home Pack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="../portal.css">
+    <style>
+        .reservation-wizard {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .wizard-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .wizard-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gray-200);
+            z-index: 0;
+        }
+        
+        .wizard-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            z-index: 1;
+            background: white;
+            padding: 0 1rem;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            color: var(--gray-600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        
+        .wizard-step.active .step-number {
+            background: var(--primary-red);
+            color: white;
+        }
+        
+        .wizard-step.completed .step-number {
+            background: var(--accent-green);
+            color: white;
+        }
+        
+        .step-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            white-space: nowrap;
+        }
+        
+        .wizard-step.active .step-label {
+            color: var(--primary-red);
+        }
+        
+        .wizard-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .form-section {
+            display: none;
+        }
+        
+        .form-section.active {
+            display: block;
+        }
+        
+        .signature-pad {
+            border: 2px dashed var(--gray-300);
+            border-radius: 8px;
+            background: var(--gray-50);
+            height: 200px;
+            cursor: crosshair;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+        
+        .signature-pad canvas {
+            display: block;
+            border-radius: 6px;
+        }
+        
+        .signature-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .payment-method {
+            border: 2px solid var(--gray-300);
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1rem;
+        }
+        
+        .payment-method:hover {
+            border-color: var(--primary-red);
+        }
+        
+        .payment-method.selected {
+            border-color: var(--primary-red);
+            background: rgba(211, 47, 47, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="../../index.html" class="sidebar-logo">
+                <svg width="180" height="38" viewBox="0 0 240 50" xmlns="http://www.w3.org/2000/svg">
+                    <g id="nhp-logo">
+                        <g transform="translate(5, 8)">
+                            <path d="M8 28 L20 22 L32 28 L32 34 L20 40 L8 34 Z" fill="#B71C1C"/>
+                            <path d="M20 22 L32 28 L32 34 L20 28 Z" fill="#991B1B"/>
+                            <path d="M6 20 L18 14 L30 20 L30 26 L18 32 L6 26 Z" fill="#D32F2F"/>
+                            <path d="M18 14 L30 20 L30 26 L18 20 Z" fill="#C62828"/>
+                            <path d="M6 20 L18 14 L18 20 L6 26 Z" fill="#B71C1C"/>
+                            <path d="M4 12 L16 6 L28 12 L28 18 L16 24 L4 18 Z" fill="#DC2626"/>
+                            <path d="M16 6 L28 12 L28 18 L16 12 Z" fill="#D32F2F"/>
+                            <path d="M4 12 L16 6 L16 12 L4 18 Z" fill="#C62828"/>
+                            <path d="M16 6 L16 12 M16 12 L16 24" stroke="white" stroke-width="0.5" opacity="0.3"/>
+                            <path d="M4 12 L4 18 M6 20 L6 26 M8 28 L8 34" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <path d="M13 16 L15 18 L19 14" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M15 24 L17 26 L21 22" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+                            <path d="M17 32 L19 34 L23 30" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+                        </g>
+                        <text x="58" y="20" font-family="Inter, sans-serif" font-size="16" font-weight="800" fill="white" letter-spacing="0.5">NEW HOME</text>
+                        <text x="58" y="36" font-family="Inter, sans-serif" font-size="16" font-weight="800" fill="#DC2626" letter-spacing="0.5">PACK</text>
+                    </g>
+                </svg>
+            </a>
+
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="dashboard.html" class="sidebar-link">
+                        <span class="sidebar-link-icon">🏠</span>
+                        <span>My Dashboard</span>
+                    </a></li>
+                    <li><a href="../../plots.html" class="sidebar-link">
+                        <span class="sidebar-link-icon">🔍</span>
+                        <span>Browse Plots</span>
+                    </a></li>
+                    <li><a href="dashboard.html" class="sidebar-link active">
+                        <span class="sidebar-link-icon">📝</span>
+                        <span>Reserve Plot</span>
+                    </a></li>
+                </ul>
+            </nav>
+
+            <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div style="color: rgba(255,255,255,0.7); font-size: 0.875rem; margin-bottom: 0.5rem;">
+                    <strong id="userName">John Smith</strong>
+                </div>
+                <a href="#" onclick="logout(); return false;" class="sidebar-link">
+                    <span class="sidebar-link-icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Reserve Your New Home</h1>
+                <p class="page-subtitle" id="plotInfo">Complete the form below to reserve your chosen plot</p>
+            </div>
+
+            <div class="reservation-wizard">
+                <!-- Progress Steps -->
+                <div class="wizard-steps">
+                    <div class="wizard-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Your Details</div>
+                    </div>
+                    <div class="wizard-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Source of Funds</div>
+                    </div>
+                    <div class="wizard-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Solicitor Details</div>
+                    </div>
+                    <div class="wizard-step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Agreement</div>
+                    </div>
+                    <div class="wizard-step" data-step="5">
+                        <div class="step-number">5</div>
+                        <div class="step-label">Payment</div>
+                    </div>
+                </div>
+
+                <!-- Form Content -->
+                <form id="reservationForm">
+                    <!-- Step 1: Your Details -->
+                    <div class="wizard-content form-section active" data-section="1">
+                        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Your Details</h2>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="firstName">First Name *</label>
+                                <input type="text" id="firstName" name="firstName" class="form-input" required value="John">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="lastName">Last Name *</label>
+                                <input type="text" id="lastName" name="lastName" class="form-input" required value="Smith">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" class="form-input" required value="buyer@demo.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" name="phone" class="form-input" required placeholder="+44 7123 456789">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="address">Current Address *</label>
+                            <textarea id="address" name="address" class="form-input" rows="3" required placeholder="Street address, City, Postcode"></textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Source of Funds -->
+                    <div class="wizard-content form-section" data-section="2">
+                        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Source of Funds</h2>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="purchaseType">Purchase Type *</label>
+                            <select id="purchaseType" name="purchaseType" class="form-input" required>
+                                <option value="">Select...</option>
+                                <option value="cash">Cash Purchase</option>
+                                <option value="mortgage">Mortgage</option>
+                                <option value="mixed">Cash + Mortgage</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="depositAmount">Deposit Amount (£) *</label>
+                            <input type="number" id="depositAmount" name="depositAmount" class="form-input" required placeholder="50000" min="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="depositSource">Source of Deposit *</label>
+                            <select id="depositSource" name="depositSource" class="form-input" required>
+                                <option value="">Select...</option>
+                                <option value="savings">Savings</option>
+                                <option value="sale">Sale of Property</option>
+                                <option value="gift">Gift from Family</option>
+                                <option value="inheritance">Inheritance</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="mortgageApproval">Mortgage Decision in Principle</label>
+                            <input type="file" id="mortgageApproval" name="mortgageApproval" class="form-input" accept=".pdf,.jpg,.png">
+                            <p style="font-size: 0.875rem; color: var(--gray-600); margin-top: 0.5rem;">Upload your DIP certificate (if applicable)</p>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Solicitor Details -->
+                    <div class="wizard-content form-section" data-section="3">
+                        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Your Solicitor Details</h2>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="haveSolicitor" onchange="toggleSolicitorFields()">
+                                <span>I have already appointed a solicitor</span>
+                            </label>
+                        </div>
+
+                        <div id="solicitorFields" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label" for="solicitorFirm">Solicitor Firm Name *</label>
+                                <input type="text" id="solicitorFirm" name="solicitorFirm" class="form-input">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="solicitorContact">Contact Name *</label>
+                                <input type="text" id="solicitorContact" name="solicitorContact" class="form-input">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="solicitorEmail">Email Address *</label>
+                                <input type="email" id="solicitorEmail" name="solicitorEmail" class="form-input">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="solicitorPhone">Phone Number *</label>
+                                <input type="tel" id="solicitorPhone" name="solicitorPhone" class="form-input">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Agreement & Signature -->
+                    <div class="wizard-content form-section" data-section="4">
+                        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Reservation Agreement</h2>
+                        
+                        <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; max-height: 300px; overflow-y: auto; border: 1px solid var(--gray-200);">
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">Terms & Conditions</h3>
+                            <p style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-bottom: 1rem;">
+                                By signing this reservation agreement, you agree to reserve the property at <span id="agreementPlot"></span> for the purchase price shown. 
+                                The reservation fee is non-refundable except in the following circumstances:
+                            </p>
+                            <ul style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-left: 1.5rem;">
+                                <li>The developer withdraws the property from sale</li>
+                                <li>Unsatisfactory survey results</li>
+                                <li>Mortgage application rejection (with DIP evidence)</li>
+                                <li>Material defects discovered during conveyancing</li>
+                            </ul>
+                            <p style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-top: 1rem;">
+                                The reservation period is 28 days, during which time you must instruct a solicitor and exchange contracts. 
+                                The developer will remove the property from the market during this period.
+                            </p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Your Signature *</label>
+                            <div class="signature-pad" id="signaturePad">
+                                <canvas id="signatureCanvas"></canvas>
+                            </div>
+                            <div class="signature-actions">
+                                <button type="button" class="btn btn-secondary btn-small" onclick="clearSignature()">Clear Signature</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="agreeTerms" required>
+                                <span>I have read and agree to the terms and conditions *</span>
+                            </label>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue to Payment</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Payment -->
+                    <div class="wizard-content form-section" data-section="5">
+                        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Reservation Fee Payment</h2>
+                        
+                        <div style="background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; text-align: center;">
+                            <div style="font-size: 0.875rem; opacity: 0.9; margin-bottom: 0.5rem;">Reservation Fee</div>
+                            <div style="font-size: 3rem; font-weight: 700;" id="reservationFee">£2,000</div>
+                            <div style="font-size: 0.875rem; opacity: 0.9; margin-top: 0.5rem;">Deducted from purchase price at completion</div>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">Select Payment Method</h3>
+                            
+                            <div class="payment-method selected" onclick="selectPayment('card')">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="font-size: 2rem;">💳</div>
+                                    <div>
+                                        <div style="font-weight: 600;">Debit/Credit Card</div>
+                                        <div style="font-size: 0.875rem; color: var(--gray-600);">Instant confirmation</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="payment-method" onclick="selectPayment('bank')">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="font-size: 2rem;">🏦</div>
+                                    <div>
+                                        <div style="font-weight: 600;">Bank Transfer</div>
+                                        <div style="font-size: 0.875rem; color: var(--gray-600);">1-3 business days</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="background: var(--gray-50); padding: 1rem; border-radius: 8px; margin-bottom: 2rem; text-align: center;">
+                            <p style="font-size: 0.875rem; color: var(--gray-700);">
+                                🔒 Secure payment powered by Stripe • Your payment information is encrypted and secure
+                            </p>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                            <button type="button" class="btn btn-primary btn-large" onclick="submitReservation()">Complete Reservation</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="../auth.js"></script>
+    <script src="reserve.js"></script>
+</body>
+</html>

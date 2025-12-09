@@ -45,6 +45,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 
+                if (plotId && action === 'reserve') {
+                    // Redirect to reservation form
+                    window.location.href = `buyer/reserve.html?plot=${plotId}`;
+                    return;
+                }
+                
                 // Show role selection or redirect
                 if (email === 'developer@demo.com') {
                     window.location.href = 'developer/dashboard.html';

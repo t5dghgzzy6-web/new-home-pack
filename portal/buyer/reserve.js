@@ -281,8 +281,8 @@ function validateStep(step) {
         }
     }
 
-    // Special validation for step 4 (signature)
-    if (step === 4) {
+    // Special validation for step 5 (signature)
+    if (step === 5) {
         if (!signaturePad || signaturePad.isEmpty()) {
             alert('Please provide your signature');
             return false;

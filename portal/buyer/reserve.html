@@ -338,11 +338,11 @@
                     </div>
                     <div class="wizard-step" data-step="4">
                         <div class="step-number">4</div>
-                        <div class="step-label">Agreement</div>
+                        <div class="step-label">Payment</div>
                     </div>
                     <div class="wizard-step" data-step="5">
                         <div class="step-number">5</div>
-                        <div class="step-label">Payment</div>
+                        <div class="step-label">Agreement & Sign</div>
                     </div>
                 </div>
 
@@ -489,53 +489,8 @@
                         </div>
                     </div>
 
-                    <!-- Step 4: Agreement & Signature -->
+                    <!-- Step 4: Payment -->
                     <div class="wizard-content form-section" data-section="4">
-                        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Reservation Agreement</h2>
-                        
-                        <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; max-height: 300px; overflow-y: auto; border: 1px solid var(--gray-200);">
-                            <h3 style="font-weight: 600; margin-bottom: 1rem;">Terms & Conditions</h3>
-                            <p style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-bottom: 1rem;">
-                                By signing this reservation agreement, you agree to reserve the property at <span id="agreementPlot"></span> for the purchase price shown. 
-                                The reservation fee is non-refundable except in the following circumstances:
-                            </p>
-                            <ul style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-left: 1.5rem;">
-                                <li>The developer withdraws the property from sale</li>
-                                <li>Unsatisfactory survey results</li>
-                                <li>Mortgage application rejection (with DIP evidence)</li>
-                                <li>Material defects discovered during conveyancing</li>
-                            </ul>
-                            <p style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-top: 1rem;">
-                                The reservation period is 28 days, during which time you must instruct a solicitor and exchange contracts. 
-                                The developer will remove the property from the market during this period.
-                            </p>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Your Signature *</label>
-                            <div class="signature-pad" id="signaturePad">
-                                <canvas id="signatureCanvas"></canvas>
-                            </div>
-                            <div class="signature-actions">
-                                <button type="button" class="btn btn-secondary btn-small" onclick="clearSignature()">Clear Signature</button>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="agreeTerms" required>
-                                <span>I have read and agree to the terms and conditions *</span>
-                            </label>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
-                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue to Payment</button>
-                        </div>
-                    </div>
-
-                    <!-- Step 5: Payment -->
-                    <div class="wizard-content form-section" data-section="5">
                         <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Reservation Fee Payment</h2>
                         
                         <div style="background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; text-align: center;">
@@ -572,6 +527,51 @@
                             <p style="font-size: 0.875rem; color: var(--gray-700);">
                                 🔒 Secure payment powered by Stripe • Your payment information is encrypted and secure
                             </p>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep()">Proceed to Sign Agreement</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Agreement & Signature -->
+                    <div class="wizard-content form-section" data-section="5">
+                        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Reservation Agreement & Signature</h2>
+                        
+                        <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; max-height: 300px; overflow-y: auto; border: 1px solid var(--gray-200);">
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">Terms & Conditions</h3>
+                            <p style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-bottom: 1rem;">
+                                By signing this reservation agreement, you agree to reserve the property at <span id="agreementPlot"></span> for the purchase price shown. 
+                                The reservation fee is non-refundable except in the following circumstances:
+                            </p>
+                            <ul style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-left: 1.5rem;">
+                                <li>The developer withdraws the property from sale</li>
+                                <li>Unsatisfactory survey results</li>
+                                <li>Mortgage application rejection (with DIP evidence)</li>
+                                <li>Material defects discovered during conveyancing</li>
+                            </ul>
+                            <p style="font-size: 0.875rem; line-height: 1.6; color: var(--gray-700); margin-top: 1rem;">
+                                The reservation period is 28 days, during which time you must instruct a solicitor and exchange contracts. 
+                                The developer will remove the property from the market during this period.
+                            </p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Your Signature *</label>
+                            <div class="signature-pad" id="signaturePad">
+                                <canvas id="signatureCanvas"></canvas>
+                            </div>
+                            <div class="signature-actions">
+                                <button type="button" class="btn btn-secondary btn-small" onclick="clearSignature()">Clear Signature</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="agreeTerms" required>
+                                <span>I have read and agree to the terms and conditions *</span>
+                            </label>
                         </div>
 
                         <div class="form-actions">

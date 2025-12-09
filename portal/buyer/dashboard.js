@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkAuthWithRole('buyer');
     loadUserInfo();
     loadMortgageOfferCount();
+    loadDocumentCount();
 });
 
 function loadUserInfo() {
@@ -25,5 +26,23 @@ function loadMortgageOfferCount() {
     
     if (document.getElementById('mortgageOfferCount')) {
         document.getElementById('mortgageOfferCount').textContent = count;
+    }
+}
+
+function loadDocumentCount() {
+    const user = getCurrentUser();
+    const allDocuments = JSON.parse(localStorage.getItem('plot_documents') || '[]');
+    
+    // Filter to buyer documents for current user
+    const userDocuments = allDocuments.filter(doc => 
+        doc.category === 'buyer' && 
+        doc.uploadedBy === (user?.email || 'buyer@demo.com')
+    );
+    
+    const requiredCount = 6; // Total required documents
+    const uploadedCount = userDocuments.length;
+    
+    if (document.getElementById('documentsCount')) {
+        document.getElementById('documentsCount').textContent = `${uploadedCount}/${requiredCount}`;
     }
 }

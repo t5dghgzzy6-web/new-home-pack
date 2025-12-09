@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Documents - New Home Pack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="../portal.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="../../index.html" class="sidebar-logo">
+                <svg width="180" height="38" viewBox="0 0 240 50" xmlns="http://www.w3.org/2000/svg">
+                    <g id="nhp-logo">
+                        <g transform="translate(5, 8)">
+                            <path d="M8 28 L20 22 L32 28 L32 34 L20 40 L8 34 Z" fill="#B71C1C"/>
+                            <path d="M20 22 L32 28 L32 34 L20 28 Z" fill="#991B1B"/>
+                            <path d="M6 20 L18 14 L30 20 L30 26 L18 32 L6 26 Z" fill="#D32F2F"/>
+                            <path d="M18 14 L30 20 L30 26 L18 20 Z" fill="#C62828"/>
+                            <path d="M6 20 L18 14 L18 20 L6 26 Z" fill="#B71C1C"/>
+                            <path d="M4 12 L16 6 L28 12 L28 18 L16 24 L4 18 Z" fill="#DC2626"/>
+                            <path d="M16 6 L28 12 L28 18 L16 12 Z" fill="#D32F2F"/>
+                            <path d="M4 12 L16 6 L16 12 L4 18 Z" fill="#C62828"/>
+                            <path d="M16 6 L16 12 M16 12 L16 24" stroke="white" stroke-width="0.5" opacity="0.3"/>
+                            <path d="M4 12 L4 18 M6 20 L6 26 M8 28 L8 34" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <path d="M13 16 L15 18 L19 14" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M15 24 L17 26 L21 22" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+                            <path d="M17 32 L19 34 L23 30" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+                        </g>
+                        <text x="58" y="20" font-family="Inter, sans-serif" font-size="16" font-weight="800" fill="white" letter-spacing="0.5">NEW HOME</text>
+                        <text x="58" y="36" font-family="Inter, sans-serif" font-size="16" font-weight="800" fill="#DC2626" letter-spacing="0.5">PACK</text>
+                    </g>
+                </svg>
+            </a>
+
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="dashboard.html" class="sidebar-link">
+                        <span class="sidebar-link-icon">🏠</span>
+                        <span>My Dashboard</span>
+                    </a></li>
+                    <li><a href="../../plots.html" class="sidebar-link">
+                        <span class="sidebar-link-icon">🔍</span>
+                        <span>Browse Plots</span>
+                    </a></li>
+                    <li><a href="documents.html" class="sidebar-link active">
+                        <span class="sidebar-link-icon">📄</span>
+                        <span>My Documents</span>
+                    </a></li>
+                    <li><a href="mortgage.html" class="sidebar-link">
+                        <span class="sidebar-link-icon">💰</span>
+                        <span>Mortgage</span>
+                    </a></li>
+                    <li><a href="dashboard.html" class="sidebar-link" onclick="alert('Viewings feature coming soon!'); return false;">
+                        <span class="sidebar-link-icon">📅</span>
+                        <span>My Viewings</span>
+                    </a></li>
+                    <li><a href="dashboard.html" class="sidebar-link" onclick="alert('Reservations feature coming soon!'); return false;">
+                        <span class="sidebar-link-icon">📝</span>
+                        <span>My Reservations</span>
+                    </a></li>
+                    <li><a href="dashboard.html" class="sidebar-link" onclick="alert('Messages feature coming soon!'); return false;">
+                        <span class="sidebar-link-icon">💬</span>
+                        <span>Messages</span>
+                    </a></li>
+                    <li><a href="dashboard.html" class="sidebar-link" onclick="alert('Settings feature coming soon!'); return false;">
+                        <span class="sidebar-link-icon">⚙️</span>
+                        <span>Settings</span>
+                    </a></li>
+                </ul>
+            </nav>
+
+            <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div style="color: rgba(255,255,255,0.7); font-size: 0.875rem; margin-bottom: 0.5rem;">
+                    <strong id="userName">John Smith</strong>
+                </div>
+                <a href="../login.html" style="color: rgba(255,255,255,0.5); font-size: 0.875rem; text-decoration: none;">
+                    Sign Out →
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div>
+                    <h1 style="font-size: 1.875rem; font-weight: 700; margin-bottom: 0.5rem;">My Documents</h1>
+                    <p style="color: #6B7280;">Upload and manage your purchase documents</p>
+                </div>
+            </header>
+
+            <!-- Document Checklist Progress -->
+            <div class="card" style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <div>
+                        <h2 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.25rem;">Document Checklist</h2>
+                        <p style="color: #6B7280; font-size: 0.875rem;">Complete your document submission</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 2rem; font-weight: 700; color: #DC2626;" id="progressPercentage">0%</div>
+                        <div style="font-size: 0.875rem; color: #6B7280;" id="progressText">0 of 6 completed</div>
+                    </div>
+                </div>
+                <div style="background: #E5E7EB; border-radius: 9999px; height: 12px; overflow: hidden;">
+                    <div id="progressBar" style="background: linear-gradient(to right, #DC2626, #EF4444); height: 100%; width: 0%; transition: width 0.3s;"></div>
+                </div>
+            </div>
+
+            <!-- Required Documents -->
+            <div class="card" style="margin-bottom: 2rem;">
+                <h2 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1.5rem;">Required Documents</h2>
+                <div id="requiredDocuments"></div>
+            </div>
+
+            <!-- Uploaded Documents -->
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.125rem; font-weight: 600;">Uploaded Documents</h2>
+                    <div style="color: #6B7280; font-size: 0.875rem;" id="uploadedCount">0 documents</div>
+                </div>
+                <div id="uploadedDocuments">
+                    <div style="text-align: center; padding: 3rem; color: #9CA3AF;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📄</div>
+                        <p>No documents uploaded yet</p>
+                        <p style="font-size: 0.875rem; margin-top: 0.5rem;">Upload required documents above to get started</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 id="modalTitle">Upload Document</h2>
+                <button class="modal-close" onclick="closeUploadModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="uploadForm">
+                    <input type="hidden" id="uploadDocType" name="docType">
+                    
+                    <div class="form-group">
+                        <label>Document Type</label>
+                        <input type="text" id="uploadDocTypeLabel" readonly style="background: #F3F4F6; cursor: not-allowed;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="uploadFile">Select File *</label>
+                        <input type="file" id="uploadFile" name="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
+                        <small style="color: #6B7280; display: block; margin-top: 0.5rem;">
+                            Accepted formats: PDF, JPG, PNG, DOC, DOCX (Max 10MB)
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="uploadNotes">Notes (Optional)</label>
+                        <textarea id="uploadNotes" name="notes" rows="3" placeholder="Add any additional information about this document"></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                        <button type="button" class="btn btn-secondary" onclick="closeUploadModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Upload Document</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="documents.js"></script>
+</body>
+</html>

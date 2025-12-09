@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Dashboard - New Home Pack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="../portal.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="../../index.html" class="sidebar-logo">
+                <svg width="180" height="38" viewBox="0 0 240 50" xmlns="http://www.w3.org/2000/svg">
+                    <g id="nhp-logo">
+                        <g transform="translate(5, 8)">
+                            <path d="M8 28 L20 22 L32 28 L32 34 L20 40 L8 34 Z" fill="#B71C1C"/>
+                            <path d="M20 22 L32 28 L32 34 L20 28 Z" fill="#991B1B"/>
+                            <path d="M6 20 L18 14 L30 20 L30 26 L18 32 L6 26 Z" fill="#D32F2F"/>
+                            <path d="M18 14 L30 20 L30 26 L18 20 Z" fill="#C62828"/>
+                            <path d="M6 20 L18 14 L18 20 L6 26 Z" fill="#B71C1C"/>
+                            <path d="M4 12 L16 6 L28 12 L28 18 L16 24 L4 18 Z" fill="#DC2626"/>
+                            <path d="M16 6 L28 12 L28 18 L16 12 Z" fill="#D32F2F"/>
+                            <path d="M4 12 L16 6 L16 12 L4 18 Z" fill="#C62828"/>
+                            <path d="M16 6 L16 12 M16 12 L16 24" stroke="white" stroke-width="0.5" opacity="0.3"/>
+                            <path d="M4 12 L4 18 M6 20 L6 26 M8 28 L8 34" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <path d="M13 16 L15 18 L19 14" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M15 24 L17 26 L21 22" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+                            <path d="M17 32 L19 34 L23 30" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+                        </g>
+                        <text x="58" y="20" font-family="Inter, sans-serif" font-size="16" font-weight="800" fill="white" letter-spacing="0.5">NEW HOME</text>
+                        <text x="58" y="36" font-family="Inter, sans-serif" font-size="16" font-weight="800" fill="#DC2626" letter-spacing="0.5">PACK</text>
+                    </g>
+                </svg>
+            </a>
+
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="dashboard.html" class="sidebar-link active">
+                        <span class="sidebar-link-icon">📊</span>
+                        <span>Dashboard</span>
+                    </a></li>
+                    <li><a href="developments.html" class="sidebar-link">
+                        <span class="sidebar-link-icon">🏗️</span>
+                        <span>Developments</span>
+                    </a></li>
+                    <li><a href="plots.html" class="sidebar-link">
+                        <span class="sidebar-link-icon">🏡</span>
+                        <span>Plots</span>
+                    </a></li>
+                    <li><a href="documents.html" class="sidebar-link">
+                        <span class="sidebar-link-icon">📋</span>
+                        <span>Documents</span>
+                    </a></li>
+                    <li><a href="buyers.html" class="sidebar-link">
+                        <span class="sidebar-link-icon">👥</span>
+                        <span>Buyers</span>
+                    </a></li>
+                    <li><a href="reservations.html" class="sidebar-link">
+                        <span class="sidebar-link-icon">📝</span>
+                        <span>Reservations</span>
+                    </a></li>
+                    <li><a href="analytics.html" class="sidebar-link">
+                        <span class="sidebar-link-icon">📈</span>
+                        <span>Analytics</span>
+                    </a></li>
+                    <li><a href="settings.html" class="sidebar-link">
+                        <span class="sidebar-link-icon">⚙️</span>
+                        <span>Settings</span>
+                    </a></li>
+                </ul>
+            </nav>
+
+            <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div style="color: rgba(255,255,255,0.7); font-size: 0.875rem; margin-bottom: 0.5rem;">
+                    <strong id="userName">Demo Developer</strong>
+                </div>
+                <a href="#" onclick="logout(); return false;" class="sidebar-link">
+                    <span class="sidebar-link-icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Dashboard</h1>
+                <p class="page-subtitle">Welcome back! Here's what's happening with your developments.</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Plots</div>
+                    <div class="stat-value">42</div>
+                    <div class="stat-change positive">+5 this month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Available</div>
+                    <div class="stat-value">18</div>
+                    <div class="stat-change">43% available</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Reserved</div>
+                    <div class="stat-value">15</div>
+                    <div class="stat-change positive">+3 this week</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Exchanged</div>
+                    <div class="stat-value">9</div>
+                    <div class="stat-change positive">+2 this week</div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h2 class="table-title">Recent Plot Activity</h2>
+                    <a href="plots.html" class="btn btn-secondary btn-small">View All</a>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Plot</th>
+                            <th>Development</th>
+                            <th>Status</th>
+                            <th>Buyer</th>
+                            <th>Pack Downloads</th>
+                            <th>Last Activity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Plot 15</strong></td>
+                            <td>Greenfield Gardens</td>
+                            <td><span class="badge badge-reserved">Reserved</span></td>
+                            <td>John Smith</td>
+                            <td>3</td>
+                            <td>2 hours ago</td>
+                            <td><a href="plots.html?id=15" class="form-link">View</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Plot 7</strong></td>
+                            <td>Riverside Heights</td>
+                            <td><span class="badge badge-exchanged">Exchanged</span></td>
+                            <td>Sarah Jones</td>
+                            <td>5</td>
+                            <td>1 day ago</td>
+                            <td><a href="plots.html?id=7" class="form-link">View</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Plot 23</strong></td>
+                            <td>Greenfield Gardens</td>
+                            <td><span class="badge badge-available">Available</span></td>
+                            <td>-</td>
+                            <td>12</td>
+                            <td>3 days ago</td>
+                            <td><a href="plots.html?id=23" class="form-link">View</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Plot 4</strong></td>
+                            <td>Riverside Heights</td>
+                            <td><span class="badge badge-reserved">Reserved</span></td>
+                            <td>Michael Brown</td>
+                            <td>7</td>
+                            <td>5 days ago</td>
+                            <td><a href="plots.html?id=4" class="form-link">View</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Plot 31</strong></td>
+                            <td>Oakwood Manor</td>
+                            <td><span class="badge badge-completed">Completed</span></td>
+                            <td>Emma Wilson</td>
+                            <td>4</td>
+                            <td>1 week ago</td>
+                            <td><a href="plots.html?id=31" class="form-link">View</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Quick Actions -->
+            <div style="margin-top: 2rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Quick Actions</h2>
+                <div class="stats-grid">
+                    <a href="developments.html?action=new" class="stat-card" style="text-decoration: none; cursor: pointer; border: 2px dashed var(--gray-300);">
+                        <div style="text-align: center; padding: 1rem;">
+                            <div style="font-size: 3rem; margin-bottom: 0.5rem;">➕</div>
+                            <div style="font-weight: 600; color: var(--primary-black);">Add Development</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-600);">Create a new site</div>
+                        </div>
+                    </a>
+                    <a href="plots.html?action=new" class="stat-card" style="text-decoration: none; cursor: pointer; border: 2px dashed var(--gray-300);">
+                        <div style="text-align: center; padding: 1rem;">
+                            <div style="font-size: 3rem; margin-bottom: 0.5rem;">🏡</div>
+                            <div style="font-weight: 600; color: var(--primary-black);">Add Plot</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-600);">Add plots to a development</div>
+                        </div>
+                    </a>
+                    <a href="documents.html?action=upload" class="stat-card" style="text-decoration: none; cursor: pointer; border: 2px dashed var(--gray-300);">
+                        <div style="text-align: center; padding: 1rem;">
+                            <div style="font-size: 3rem; margin-bottom: 0.5rem;">📄</div>
+                            <div style="font-weight: 600; color: var(--primary-black);">Upload Documents</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-600);">Add legal packs</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../auth.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>

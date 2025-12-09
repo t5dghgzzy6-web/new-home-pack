@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Plots - New Home Pack</title>
+    <meta name="description" content="Browse available new build plots with complete property information packs ready to download.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">
+                        <svg width="240" height="50" viewBox="0 0 240 50" xmlns="http://www.w3.org/2000/svg">
+                            <g id="nhp-logo">
+                                <g transform="translate(5, 8)">
+                                    <path d="M8 28 L20 22 L32 28 L32 34 L20 40 L8 34 Z" fill="#B71C1C"/>
+                                    <path d="M20 22 L32 28 L32 34 L20 28 Z" fill="#991B1B"/>
+                                    <path d="M6 20 L18 14 L30 20 L30 26 L18 32 L6 26 Z" fill="#D32F2F"/>
+                                    <path d="M18 14 L30 20 L30 26 L18 20 Z" fill="#C62828"/>
+                                    <path d="M6 20 L18 14 L18 20 L6 26 Z" fill="#B71C1C"/>
+                                    <path d="M4 12 L16 6 L28 12 L28 18 L16 24 L4 18 Z" fill="#DC2626"/>
+                                    <path d="M16 6 L28 12 L28 18 L16 12 Z" fill="#D32F2F"/>
+                                    <path d="M4 12 L16 6 L16 12 L4 18 Z" fill="#C62828"/>
+                                    <path d="M16 6 L16 12 M16 12 L16 24" stroke="#1a1a1a" stroke-width="0.5" opacity="0.3"/>
+                                    <path d="M4 12 L4 18 M6 20 L6 26 M8 28 L8 34" stroke="#1a1a1a" stroke-width="0.5" opacity="0.2"/>
+                                    <path d="M13 16 L15 18 L19 14" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M15 24 L17 26 L21 22" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+                                    <path d="M17 32 L19 34 L23 30" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+                                </g>
+                                <text x="58" y="20" font-family="Inter, sans-serif" font-size="16" font-weight="800" fill="#1a1a1a" letter-spacing="0.5">NEW HOME</text>
+                                <text x="58" y="36" font-family="Inter, sans-serif" font-size="16" font-weight="800" fill="#DC2626" letter-spacing="0.5">PACK</text>
+                            </g>
+                        </svg>
+                    </a>
+                </div>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="plots.html" class="nav-link" style="color: var(--primary-red);">Browse Plots</a>
+                    <a href="index.html#features" class="nav-link">Features</a>
+                    <a href="index.html#pricing" class="nav-link">Pricing</a>
+                    <a href="portal/login.html" class="nav-link">Login</a>
+                    <a href="portal/signup.html" class="btn btn-primary btn-small">Get Started</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" style="padding: 4rem 0 3rem; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);">
+        <div class="container">
+            <div class="hero-content" style="text-align: center; max-width: 800px; margin: 0 auto;">
+                <h1 class="hero-title" style="color: white;">
+                    Find Your Perfect <span class="hero-highlight">New Build Home</span>
+                </h1>
+                <p class="hero-subtitle" style="color: rgba(255,255,255,0.8);">
+                    Browse available plots with complete property information packs. Download documentation, book viewings, and reserve your dream home—all in one place.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters Section -->
+    <section style="padding: 2rem 0; background: var(--gray-50); border-bottom: 1px solid var(--gray-200);">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; align-items: end;">
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--primary-black);">Development</label>
+                    <select id="filterDevelopment" style="width: 100%; padding: 0.75rem; border: 2px solid var(--gray-300); border-radius: 8px; font-family: var(--font-family); font-size: 1rem;">
+                        <option value="">All Developments</option>
+                        <option value="greenfield">Greenfield Gardens</option>
+                        <option value="riverside">Riverside Heights</option>
+                        <option value="oakwood">Oakwood Manor</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--primary-black);">Bedrooms</label>
+                    <select id="filterBedrooms" style="width: 100%; padding: 0.75rem; border: 2px solid var(--gray-300); border-radius: 8px; font-family: var(--font-family); font-size: 1rem;">
+                        <option value="">Any</option>
+                        <option value="1">1 Bed</option>
+                        <option value="2">2 Beds</option>
+                        <option value="3">3 Beds</option>
+                        <option value="4">4 Beds</option>
+                        <option value="5">5+ Beds</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--primary-black);">Property Type</label>
+                    <select id="filterType" style="width: 100%; padding: 0.75rem; border: 2px solid var(--gray-300); border-radius: 8px; font-family: var(--font-family); font-size: 1rem;">
+                        <option value="">All Types</option>
+                        <option value="detached">Detached</option>
+                        <option value="semi-detached">Semi-Detached</option>
+                        <option value="terraced">Terraced</option>
+                        <option value="townhouse">Townhouse</option>
+                        <option value="apartment">Apartment</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--primary-black);">Max Price</label>
+                    <select id="filterPrice" style="width: 100%; padding: 0.75rem; border: 2px solid var(--gray-300); border-radius: 8px; font-family: var(--font-family); font-size: 1rem;">
+                        <option value="">Any Price</option>
+                        <option value="250000">Up to £250,000</option>
+                        <option value="350000">Up to £350,000</option>
+                        <option value="450000">Up to £450,000</option>
+                        <option value="600000">Up to £600,000</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Plots Grid -->
+    <section style="padding: 3rem 0;">
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <div>
+                    <h2 style="font-size: 1.75rem; font-weight: 700; color: var(--primary-black); margin-bottom: 0.25rem;">Available Plots</h2>
+                    <p style="color: var(--gray-600);" id="plotCount">Showing 12 properties</p>
+                </div>
+                <div>
+                    <select id="sortBy" style="padding: 0.75rem 1rem; border: 2px solid var(--gray-300); border-radius: 8px; font-family: var(--font-family);">
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                        <option value="beds-desc">Bedrooms: Most First</option>
+                        <option value="newest">Newest First</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="plotsGrid" class="features-grid">
+                <!-- Plots will be dynamically inserted here -->
+            </div>
+
+            <div id="noResults" style="display: none; text-align: center; padding: 4rem 2rem;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">🏡</div>
+                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">No plots found</h3>
+                <p style="color: var(--gray-600);">Try adjusting your filters to see more results</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Can't Find What You're Looking For?</h2>
+                <p class="cta-subtitle">
+                    Register your interest and we'll notify you when new plots become available.
+                </p>
+                <div class="cta-buttons">
+                    <a href="portal/signup.html?type=buyer" class="btn btn-primary btn-large">Register Interest</a>
+                    <a href="tel:+441234567890" class="btn btn-secondary btn-large">Call: 01234 567890</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 class="footer-title">New Home Pack</h4>
+                    <p class="footer-description">
+                        Accelerating new build sales with complete property information.
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">For Buyers</h4>
+                    <ul class="footer-links">
+                        <li><a href="plots.html">Browse Plots</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#faq">FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">For Developers</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html#features">Features</a></li>
+                        <li><a href="index.html#pricing">Pricing</a></li>
+                        <li><a href="portal/signup.html">Get Started</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Contact</h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:hello@newhomepack.com">hello@newhomepack.com</a></li>
+                        <li><a href="tel:+441234567890">01234 567890</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 New Home Pack. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="plots.js"></script>
+</body>
+</html>

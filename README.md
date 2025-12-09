@@ -1,53 +1,96 @@
 # New Home Pack
 
-Complete property information for new build developers.
+**Digital Platform for New Build Property Sales**
 
-## Overview
+A comprehensive platform for property developers to manage new build sales with digital property packs, buyer reservations, multi-buyer support, e-signature integration, and complete GDPR-compliant document management.
 
-**Positioning:** "Sell New Homes Faster & Smarter"
+## 🚀 Live Demo
 
-New Home Pack provides comprehensive property information packs for new build developments, helping developers accelerate sales, reduce fall-throughs, and give buyers confidence from day one.
+**Production:** [https://t5dghgzzy6-web.github.io/new-home-pack/](https://t5dghgzzy6-web.github.io/new-home-pack/)
 
-## Target Audience
+**Local Development:** `http://localhost:8005`
 
-- Volume housebuilders
-- Boutique developers
-- Apartment developers
-- Mixed-use scheme developers
+## ✨ Features
 
-## Key Features
+### For Developers
+- 📊 Dashboard - Real-time overview of plots, reservations, and revenue
+- 🏗️ Developments Management - Create and manage multiple developments
+- 🏡 Plot Management - Track availability, pricing, and status
+- 📋 Document Management - Organized by Development → Phase → Plot with GDPR controls
+- 👥 Buyer Management - Track enquiries, viewings, and reservations
+- 📝 Reservations Dashboard - View, manage, and track all reservations
+- 📈 Analytics - Performance metrics, conversion rates, and sales funnel
+- ⚙️ Settings - Configure T&Cs, DocuSign connection, and reservation fees
 
-- Complete documentation (title plans, specs, warranties, planning)
-- Plot-specific information packs
-- Full cost transparency (service charges, ground rent, management fees)
-- Fast solicitor processing
-- NHBC & warranty details
-- Digital portal access for buyers and solicitors
+### For Buyers
+- 🔍 Browse Plots - Search and filter available properties
+- 📥 Download Packs - Digital property packs with all documentation
+- 💰 Get Quotes - Conveyancing quotes from approved solicitors
+- 🏦 Mortgage Integration - Connect to LMS/Lender Exchange for offers
+- 📝 Reservation - Complete 5-step reservation process
+- 👥 Multi-Buyer Support - Add up to 4 buyers per reservation
+- ✍️ E-Signature - DocuSign integration or canvas signatures
+- 💳 Payment - Platform-agnostic payment with Stripe/bank transfer
 
-## Brand Colors
+### Security & Compliance
+- 🔒 GDPR Compliant - Role-based document access controls
+- 🛡️ AML Integration - Anti-money laundering verification (Credas ready)
+- 📄 DocuSign Integration - Secure electronic signatures
+- 🔐 Role-Based Access - Buyer, Developer, Sales, Solicitor, Admin roles
 
-- **Primary Red:** #DC2626 (Brand identity, based on Home Sale Pack)
-- **Primary Black:** #1F2937 (Professional, authoritative)
-- **Accent Red:** #B91C1C (Darker accent for hover states)
+## 🧪 Demo Accounts
 
-## Value Proposition
+```
+Buyer:      buyer@demo.com      | Password: demo123
+Developer:  developer@demo.com  | Password: demo123
+Sales:      sales@demo.com      | Password: demo123
+Solicitor:  solicitor@demo.com  | Password: demo123
+Admin:      admin@demo.com      | Password: demo123
+```
 
-- 40% faster completions
-- 60% fewer fall-throughs
-- 90% fewer enquiries
-- 100% buyer confidence
+## 🛠️ Tech Stack
 
-## Pricing
+- **Frontend:** HTML5, CSS3, Vanilla JavaScript
+- **Storage:** LocalStorage (MVP) - Backend API ready
+- **Deployment:** GitHub Pages + GitHub Actions
+- **Integrations:** Stripe, DocuSign, Credas AML, LMS Lender Exchange
 
-- **Pay Per Plot:** £149/plot
-- **Development License:** £2,999/site (unlimited plots)
-- **Enterprise:** Custom pricing for volume housebuilders
+## 🚀 Getting Started
 
-## Getting Started
+```bash
+# Clone repository
+git clone https://github.com/t5dghgzzy6-web/new-home-pack.git
+cd new-home-pack
 
-1. Open `index.html` in a browser
-2. Or run a local server: `python3 -m http.server 8005`
-3. Navigate to http://localhost:8005
+# Start local server
+python3 -m http.server 8005
+
+# Open browser
+open http://localhost:8005
+```
+
+## 📋 Roadmap
+
+### ✅ Completed
+- Multi-role authentication
+- Developer & buyer dashboards
+- 5-step reservation wizard
+- Multi-buyer support (up to 4)
+- DocuSign e-signature integration
+- Mortgage offer integration
+- Payment processing with VAT
+- Signed documents management
+- Analytics & reporting
+- Document management
+
+### 🔄 In Progress
+- GDPR-compliant document hierarchy
+- Email notification system
+
+### 📅 Upcoming
+- Solicitor dashboard
+- Sales team pipeline
+- Live API integrations
 
 ## Files
 

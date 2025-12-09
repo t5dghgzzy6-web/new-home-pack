@@ -249,8 +249,32 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="address">Current Address *</label>
-                            <textarea id="address" name="address" class="form-input" rows="3" required placeholder="Street address, City, Postcode"></textarea>
+                            <label class="form-label" for="addressLine1">Address Line 1 *</label>
+                            <input type="text" id="addressLine1" name="addressLine1" class="form-input" required placeholder="House number and street name">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="addressLine2">Address Line 2</label>
+                            <input type="text" id="addressLine2" name="addressLine2" class="form-input" placeholder="Apartment, suite, etc. (optional)">
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="city">City/Town *</label>
+                                <input type="text" id="city" name="city" class="form-input" required placeholder="e.g. London">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="county">County</label>
+                                <input type="text" id="county" name="county" class="form-input" placeholder="e.g. Greater London">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="postcode">Postcode *</label>
+                            <input type="text" id="postcode" name="postcode" class="form-input" required placeholder="e.g. SW1A 1AA" style="text-transform: uppercase;">
+                            <p style="font-size: 0.875rem; color: var(--gray-600); margin-top: 0.5rem;">
+                                💡 <em>Address lookup API integration coming soon</em>
+                            </p>
                         </div>
 
                         <div class="form-actions">

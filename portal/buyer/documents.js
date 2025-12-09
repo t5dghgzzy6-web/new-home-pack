@@ -2,60 +2,43 @@
 // Integrates with GDPR-compliant document storage
 
 // Required documents for property purchase
+// Note: ID, Proof of Address, Proof of Funds, and AML docs are captured during reservation (Step 3 - Source of Funds)
 const REQUIRED_DOCUMENTS = [
-    {
-        type: 'id_document',
-        label: 'Photo ID',
-        description: 'Valid passport or driving license',
-        category: 'buyer',
-        icon: '🪪',
-        required: true,
-        examples: ['Passport', 'Driving License', 'National ID Card']
-    },
-    {
-        type: 'proof_address',
-        label: 'Proof of Address',
-        description: 'Utility bill or bank statement (last 3 months)',
-        category: 'buyer',
-        icon: '🏠',
-        required: true,
-        examples: ['Utility Bill', 'Council Tax Statement', 'Bank Statement']
-    },
-    {
-        type: 'proof_funds',
-        label: 'Proof of Funds',
-        description: 'Bank statements or mortgage agreement',
-        category: 'buyer',
-        icon: '💰',
-        required: true,
-        examples: ['Bank Statements (3 months)', 'Savings Account Statement', 'Investment Portfolio']
-    },
     {
         type: 'mortgage_offer',
         label: 'Mortgage Offer',
-        description: 'Formal mortgage offer from your lender',
+        description: 'Formal mortgage offer from your lender (if applicable)',
         category: 'buyer',
         icon: '🏦',
         required: false,
-        examples: ['Mortgage Agreement in Principle', 'Formal Mortgage Offer']
+        examples: ['Mortgage Agreement in Principle', 'Formal Mortgage Offer', 'Mortgage Illustration']
     },
     {
-        type: 'aml_docs',
-        label: 'AML Documentation',
-        description: 'Anti-money laundering verification',
+        type: 'survey_report',
+        label: 'Survey Report',
+        description: 'Property survey or valuation report (if obtained)',
         category: 'buyer',
-        icon: '✅',
-        required: true,
-        examples: ['Source of Funds Declaration', 'AML Verification Form']
+        icon: '🏗️',
+        required: false,
+        examples: ['HomeBuyer Report', 'Building Survey', 'Mortgage Valuation']
     },
     {
-        type: 'bank_statements',
-        label: 'Bank Statements',
-        description: 'Last 3 months of statements',
+        type: 'solicitor_details',
+        label: 'Solicitor Details',
+        description: 'Contact details and reference for your solicitor',
         category: 'buyer',
-        icon: '📊',
+        icon: '⚖️',
         required: true,
-        examples: ['Current Account Statements', 'Savings Account Statements']
+        examples: ['Solicitor Contact Form', 'Letter of Engagement', 'Solicitor Reference']
+    },
+    {
+        type: 'additional_docs',
+        label: 'Additional Documentation',
+        description: 'Any other documents required by your solicitor or lender',
+        category: 'buyer',
+        icon: '📋',
+        required: false,
+        examples: ['Gift Letter', 'Pension Statement', 'Employment Contract', 'Tax Returns']
     }
 ];
 
@@ -206,7 +189,7 @@ function updateProgress() {
         uploadedDocuments.some(ud => ud.type === rd.type)
     );
     
-    const percentage = Math.round((completedDocs.length / requiredDocs.length) * 100);
+    const percentage = requiredDocs.length > 0 ? Math.round((completedDocs.length / requiredDocs.length) * 100) : 0;
     
     document.getElementById('progressPercentage').textContent = `${percentage}%`;
     document.getElementById('progressText').textContent = `${completedDocs.length} of ${requiredDocs.length} completed`;

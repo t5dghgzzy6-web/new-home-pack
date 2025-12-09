@@ -831,6 +831,9 @@ function submitReservation() {
     reservations.push(data);
     localStorage.setItem('nhp_reservations', JSON.stringify(reservations));
 
+    // Save AML/Source of Funds documents to GDPR document system
+    saveSourceOfFundsDocuments(data);
+
     // Remove loading overlay
     setTimeout(() => {
         loadingOverlay.remove();
@@ -838,6 +841,163 @@ function submitReservation() {
         // Show success modal
         showSuccessModal(plot, selectedSignatureMethod);
     }, 2000);
+}
+
+// Save source of funds and AML documents to GDPR-compliant document storage
+function saveSourceOfFundsDocuments(reservationData) {
+    const plot = reservationData.plot;
+    const primaryBuyer = reservationData.buyers[0];
+    const allDocuments = JSON.parse(localStorage.getItem('plot_documents') || '[]');
+    
+    // Get the development info (in production, this would come from backend)
+    const development = plot.development || 'Demo Development';
+    const developmentId = 'dev_' + development.toLowerCase().replace(/\s+/g, '_');
+    const plotNumber = plot.number || 'Plot 1';
+    const plotId = 'plot_' + plotNumber.toLowerCase().replace(/\s+/g, '_');
+    
+    // Create documents for collected data during reservation
+    const documentsToSave = [];
+    
+    // 1. Source of Funds Declaration
+    documentsToSave.push({
+        id: 'doc_sof_' + Date.now(),
+        development: development,
+        developmentId: developmentId,
+        phase: null,
+        plot: plotNumber,
+        plotId: plotId,
+        category: 'buyer',
+        type: 'proof_funds',
+        title: 'Source of Funds Declaration',
+        fileName: `source-of-funds-${primaryBuyer.email}.pdf`,
+        size: '45 KB',
+        uploadedDate: new Date().toISOString(),
+        uploadedBy: primaryBuyer.email,
+        description: `Purchase Type: ${reservationData.purchaseType || 'Not specified'}, Deposit: £${reservationData.depositAmount || '0'}, Source: ${reservationData.depositSource || 'Not specified'}`,
+        metadata: {
+            purchaseType: reservationData.purchaseType,
+            depositAmount: reservationData.depositAmount,
+            depositSource: reservationData.depositSource,
+            sourceDetails: reservationData.sourceDetails,
+            reservationId: reservationData.reservationId
+        }
+    });
+    
+    // 2. AML Verification (if Credas was used)
+    if (credasVerified || sessionStorage.getItem('credasVerified') === 'true') {
+        documentsToSave.push({
+            id: 'doc_aml_' + Date.now(),
+            development: development,
+            developmentId: developmentId,
+            phase: null,
+            plot: plotNumber,
+            plotId: plotId,
+            category: 'buyer',
+            type: 'aml_docs',
+            title: 'AML Verification Report',
+            fileName: `aml-verification-${primaryBuyer.email}.pdf`,
+            size: '128 KB',
+            uploadedDate: new Date().toISOString(),
+            uploadedBy: primaryBuyer.email,
+            description: 'Credas AML verification completed during reservation process',
+            metadata: {
+                verificationMethod: 'Credas',
+                verificationDate: new Date().toISOString(),
+                verificationStatus: 'Verified',
+                reservationId: reservationData.reservationId
+            }
+        });
+    }
+    
+    // 3. Mortgage Offer (if connected or uploaded)
+    if (connectedMortgageOffer) {
+        documentsToSave.push({
+            id: 'doc_mortgage_' + Date.now(),
+            development: development,
+            developmentId: developmentId,
+            phase: null,
+            plot: plotNumber,
+            plotId: plotId,
+            category: 'buyer',
+            type: 'mortgage_offer',
+            title: 'Mortgage Offer - ' + connectedMortgageOffer.lender,
+            fileName: `mortgage-offer-${connectedMortgageOffer.lender.toLowerCase().replace(/\s+/g, '-')}.pdf`,
+            size: '245 KB',
+            uploadedDate: new Date().toISOString(),
+            uploadedBy: primaryBuyer.email,
+            description: `£${connectedMortgageOffer.loanAmount.toLocaleString()} @ ${connectedMortgageOffer.interestRate}% ${connectedMortgageOffer.rateType}`,
+            metadata: {
+                lender: connectedMortgageOffer.lender,
+                loanAmount: connectedMortgageOffer.loanAmount,
+                interestRate: connectedMortgageOffer.interestRate,
+                monthlyPayment: connectedMortgageOffer.monthlyPayment,
+                term: connectedMortgageOffer.term,
+                ltv: connectedMortgageOffer.ltv,
+                reservationId: reservationData.reservationId
+            }
+        });
+    }
+    
+    // 4. Reservation Agreement (signed)
+    documentsToSave.push({
+        id: 'doc_agreement_' + Date.now(),
+        development: development,
+        developmentId: developmentId,
+        phase: null,
+        plot: plotNumber,
+        plotId: plotId,
+        category: 'shared',
+        type: 'reservation_agreement',
+        title: 'Reservation Agreement',
+        fileName: `reservation-agreement-${plotNumber.toLowerCase().replace(/\s+/g, '-')}.pdf`,
+        size: '312 KB',
+        uploadedDate: new Date().toISOString(),
+        uploadedBy: primaryBuyer.email,
+        description: `Signed by ${reservationData.buyers.length} buyer(s) - ${reservationData.signatures.method === 'docusign' ? 'DocuSign' : 'Canvas signatures'}`,
+        metadata: {
+            signatureMethod: reservationData.signatures.method,
+            numberOfBuyers: reservationData.buyers.length,
+            docuSignEnvelopeId: reservationData.docuSignEnvelopeId,
+            customTCs: reservationData.customTCs,
+            reservationId: reservationData.reservationId,
+            reservationFee: plot.reservationFee
+        }
+    });
+    
+    // 5. Payment Receipt
+    if (reservationData.payment && reservationData.payment.receiptId) {
+        documentsToSave.push({
+            id: 'doc_receipt_' + Date.now(),
+            development: development,
+            developmentId: developmentId,
+            phase: null,
+            plot: plotNumber,
+            plotId: plotId,
+            category: 'shared',
+            type: 'payment_receipt',
+            title: 'Reservation Fee Payment Receipt',
+            fileName: `receipt-${reservationData.payment.receiptId}.pdf`,
+            size: '78 KB',
+            uploadedDate: new Date().toISOString(),
+            uploadedBy: primaryBuyer.email,
+            description: `£${reservationData.payment.financial.grossAmount.toLocaleString()} (inc. VAT) - ${reservationData.payment.paymentMethod}`,
+            metadata: {
+                receiptId: reservationData.payment.receiptId,
+                paymentMethod: reservationData.payment.paymentMethod,
+                netAmount: reservationData.payment.financial.netAmount,
+                vatAmount: reservationData.payment.financial.vatAmount,
+                grossAmount: reservationData.payment.financial.grossAmount,
+                paymentReference: reservationData.payment.paymentReference,
+                reservationId: reservationData.reservationId
+            }
+        });
+    }
+    
+    // Add all documents to storage
+    allDocuments.push(...documentsToSave);
+    localStorage.setItem('plot_documents', JSON.stringify(allDocuments));
+    
+    console.log(`Saved ${documentsToSave.length} documents for ${plotNumber} in ${development}`);
 }
 
 function showSuccessModal(plot, signatureMethod) {

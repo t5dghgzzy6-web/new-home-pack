@@ -39,8 +39,8 @@ function loadDocumentCount() {
         doc.uploadedBy === (user?.email || 'buyer@demo.com')
     );
     
-    const requiredCount = 6; // Total required documents
-    const uploadedCount = userDocuments.length;
+    const requiredCount = 1; // Only solicitor details is required
+    const uploadedCount = userDocuments.filter(doc => doc.type === 'solicitor_details').length;
     
     if (document.getElementById('documentsCount')) {
         document.getElementById('documentsCount').textContent = `${uploadedCount}/${requiredCount}`;

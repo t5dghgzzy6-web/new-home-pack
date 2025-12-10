@@ -834,6 +834,9 @@ function submitReservation() {
     // Save AML/Source of Funds documents to GDPR document system
     saveSourceOfFundsDocuments(data);
 
+    // Send confirmation email
+    sendReservationConfirmationEmail(data);
+
     // Remove loading overlay
     setTimeout(() => {
         loadingOverlay.remove();
@@ -841,6 +844,41 @@ function submitReservation() {
         // Show success modal
         showSuccessModal(plot, selectedSignatureMethod);
     }, 2000);
+}
+
+// Send reservation confirmation email
+function sendReservationConfirmationEmail(reservationData) {
+    // Load email service
+    const script = document.createElement('script');
+    script.src = '../email-service.js';
+    script.onload = () => {
+        if (typeof emailService !== 'undefined') {
+            const emailData = {
+                buyerName: reservationData.buyers[0].name,
+                plotNumber: reservationData.plot.number,
+                development: reservationData.plot.development,
+                price: reservationData.plot.price,
+                reservationId: reservationData.reservationId,
+                reservationDate: reservationData.reservationDate,
+                signatureMethod: reservationData.signatures.method
+            };
+
+            // Send to primary buyer
+            emailService.send('reservationConfirmation', reservationData.buyers[0].email, emailData);
+
+            // Send to all additional buyers
+            reservationData.buyers.slice(1).forEach(buyer => {
+                emailService.send('reservationConfirmation', buyer.email, emailData);
+            });
+
+            // Notify developer/sales team
+            emailService.send('reservationConfirmation', 'sales@newhomepack.com', {
+                ...emailData,
+                buyerName: 'Sales Team'
+            });
+        }
+    };
+    document.head.appendChild(script);
 }
 
 // Save source of funds and AML documents to GDPR-compliant document storage

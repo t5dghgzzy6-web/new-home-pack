@@ -280,6 +280,9 @@ document.getElementById('uploadForm').addEventListener('submit', function(e) {
     
     // Show success message
     showNotification('Document uploaded successfully!', 'success');
+    
+    // Send email notification
+    sendDocumentUploadNotification(document);
 });
 
 // Delete document
@@ -347,6 +350,27 @@ function showNotification(message, type = 'info') {
         notification.style.animation = 'slideOut 0.3s ease';
         setTimeout(() => notification.remove(), 300);
     }, 3000);
+}
+
+// Send document upload notification
+function sendDocumentUploadNotification(doc) {
+    const script = document.createElement('script');
+    script.src = '../email-service.js';
+    script.onload = () => {
+        if (typeof emailService !== 'undefined') {
+            const emailData = {
+                plotNumber: doc.plot,
+                documentTitle: doc.title,
+                category: doc.category.charAt(0).toUpperCase() + doc.category.slice(1),
+                uploadedBy: currentUser.name || 'Buyer',
+                userType: 'developer'
+            };
+
+            // Notify developer
+            emailService.send('documentUploadNotification', 'developer@newhomepack.com', emailData);
+        }
+    };
+    document.head.appendChild(script);
 }
 
 // Close modal on outside click

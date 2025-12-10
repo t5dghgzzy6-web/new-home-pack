@@ -89,7 +89,7 @@ const EMAIL_TEMPLATES = {
             
             <!-- CTA Button -->
             <div style="text-align: center; margin: 40px 0;">
-                <a href="https://newhomepack.com/portal/buyer/dashboard.html" 
+                <a href="https://t5dghgzzy6-web.github.io/new-home-pack/portal/buyer/dashboard.html" 
                    style="display: inline-block; background: #DC2626; color: white; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-weight: 600; font-size: 16px;">
                     View My Dashboard
                 </a>
@@ -152,7 +152,7 @@ const EMAIL_TEMPLATES = {
             </div>
             
             <div style="text-align: center; margin: 30px 0;">
-                <a href="https://newhomepack.com/portal/${data.userType}/documents.html" 
+                <a href="https://t5dghgzzy6-web.github.io/new-home-pack/portal/${data.userType}/documents.html" 
                    style="display: inline-block; background: #DC2626; color: white; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600;">
                     View Documents
                 </a>
@@ -199,7 +199,7 @@ const EMAIL_TEMPLATES = {
             </div>
             
             <div style="text-align: center; margin: 30px 0;">
-                <a href="https://newhomepack.com/portal/buyer/dashboard.html" 
+                <a href="https://t5dghgzzy6-web.github.io/new-home-pack/portal/buyer/dashboard.html" 
                    style="display: inline-block; background: #10B981; color: white; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-weight: 600; font-size: 16px;">
                     Download Agreement
                 </a>
@@ -250,7 +250,7 @@ const EMAIL_TEMPLATES = {
             </div>
             
             <div style="text-align: center; margin: 30px 0;">
-                <a href="https://newhomepack.com/portal/buyer/dashboard.html" 
+                <a href="https://t5dghgzzy6-web.github.io/new-home-pack/portal/buyer/dashboard.html" 
                    style="display: inline-block; background: #DC2626; color: white; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-weight: 600; font-size: 16px;">
                     View My Reservation
                 </a>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automation Dashboard - New Home Pack</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #ffffff;
+            border-right: 1px solid #d2d2d7;
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            padding: 0 1.5rem;
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+            color: #FF6B35;
+        }
+
+        .sidebar nav a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: #1d1d1f;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .sidebar nav a:hover {
+            background: #f5f5f7;
+            color: #FF6B35;
+        }
+
+        .sidebar nav a.active {
+            background: #FF6B35;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: #6e6e73;
+        }
+
+        /* Status Banner */
+        .status-banner {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .status-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #34C759;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.stopped {
+            background: #FF3B30;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-details p {
+            margin: 0.25rem 0;
+            font-size: 0.9rem;
+            color: #6e6e73;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: #FF6B35;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #E55A2B;
+        }
+
+        .btn-secondary {
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8ed;
+        }
+
+        .btn-danger {
+            background: #FF3B30;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #E02F25;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6e6e73;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .stat-value.critical {
+            color: #FF3B30;
+        }
+
+        .stat-value.warning {
+            color: #FF9500;
+        }
+
+        .stat-value.success {
+            color: #34C759;
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            color: #6e6e73;
+        }
+
+        /* Reminder Log */
+        .reminder-log {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .reminder-log h2 {
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #d2d2d7;
+        }
+
+        .filter-tab {
+            padding: 0.75rem 1rem;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #6e6e73;
+            transition: all 0.2s;
+        }
+
+        .filter-tab.active {
+            border-bottom-color: #FF6B35;
+            color: #FF6B35;
+        }
+
+        .log-entry {
+            padding: 1rem;
+            border-bottom: 1px solid #f5f5f7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-entry:hover {
+            background: #f5f5f7;
+        }
+
+        .log-info {
+            flex: 1;
+        }
+
+        .log-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .log-meta {
+            font-size: 0.85rem;
+            color: #6e6e73;
+        }
+
+        .log-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .log-status.sent {
+            background: #d4f4dd;
+            color: #1e7b34;
+        }
+
+        .log-status.failed {
+            background: #ffe5e5;
+            color: #c41e3a;
+        }
+
+        .log-status.pending {
+            background: #fff4e5;
+            color: #c77700;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6e6e73;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Upcoming Reminders */
+        .upcoming-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .upcoming-section h2 {
+            margin-bottom: 1rem;
+        }
+
+        .upcoming-item {
+            padding: 1rem;
+            border-left: 4px solid #d2d2d7;
+            margin-bottom: 1rem;
+            background: #f5f5f7;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .upcoming-item.critical {
+            border-left-color: #FF3B30;
+            background: #fff5f5;
+        }
+
+        .upcoming-item.urgent {
+            border-left-color: #FF9500;
+            background: #fff9f0;
+        }
+
+        .upcoming-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .upcoming-details {
+            font-size: 0.9rem;
+            color: #6e6e73;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .badge.critical {
+            background: #FF3B30;
+            color: white;
+        }
+
+        .badge.urgent {
+            background: #FF9500;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>🏠 New Home Pack</h2>
+            <nav>
+                <a href="../index.html">🏠 Home</a>
+                <a href="dashboard.html" class="active">🤖 Automation</a>
+                <a href="../buyer/dashboard.html">👤 Buyer Portal</a>
+                <a href="../developer/dashboard.html">🏗️ Developer Portal</a>
+                <a href="../solicitor/dashboard.html">⚖️ Solicitor Portal</a>
+                <a href="../sales/dashboard.html">💼 Sales Portal</a>
+                <a href="../admin/dashboard.html">⚙️ Admin Portal</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>🤖 Automation Dashboard</h1>
+                <p>Monitor and control automated exchange reminder system</p>
+            </div>
+
+            <!-- Status Banner -->
+            <div class="status-banner">
+                <div class="status-info">
+                    <div class="status-indicator" id="statusIndicator"></div>
+                    <div class="status-details">
+                        <h3 id="statusTitle">Automation Status</h3>
+                        <p id="statusText">Loading...</p>
+                        <p id="lastCheckText"></p>
+                    </div>
+                </div>
+                <div class="control-buttons">
+                    <button class="btn btn-primary" id="startBtn" onclick="startAutomation()">▶️ Start</button>
+                    <button class="btn btn-danger" id="stopBtn" onclick="stopAutomation()">⏸️ Stop</button>
+                    <button class="btn btn-secondary" onclick="manualCheck()">🔄 Check Now</button>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Awaiting Exchange</div>
+                    <div class="stat-value" id="awaitingCount">-</div>
+                    <div class="stat-change">Active reservations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Critical Deadlines</div>
+                    <div class="stat-value critical" id="criticalCount">-</div>
+                    <div class="stat-change">≤ 3 days remaining</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Urgent Deadlines</div>
+                    <div class="stat-value warning" id="urgentCount">-</div>
+                    <div class="stat-change">≤ 7 days remaining</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Reminders Sent Today</div>
+                    <div class="stat-value success" id="todayCount">-</div>
+                    <div class="stat-change" id="weekCount">- this week</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Reminders</div>
+                    <div class="stat-value" id="totalCount">-</div>
+                    <div class="stat-change">All time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg Days to Exchange</div>
+                    <div class="stat-value" id="avgDays">-</div>
+                    <div class="stat-change">From reservation</div>
+                </div>
+            </div>
+
+            <!-- Upcoming Reminders -->
+            <div class="upcoming-section">
+                <h2>📅 Upcoming Reminders</h2>
+                <div id="upcomingReminders">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>Loading upcoming reminders...</p>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+            <!-- Reminder Log -->
+            <div class="reminder-log">
+                <h2>
+                    <span>📋 Reminder Log</span>
+                    <button class="btn btn-secondary" onclick="refreshLog()">🔄 Refresh</button>
+                </h2>
+
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="filterLog('all')">All</button>
+                    <button class="filter-tab" onclick="filterLog('sent')">✅ Sent</button>
+                    <button class="filter-tab" onclick="filterLog('failed')">❌ Failed</button>
+                    <button class="filter-tab" onclick="filterLog('today')">📅 Today</button>
+                </div>
+
+                <div id="reminderLog">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>No reminders sent yet</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../email-service.js"></script>
+    <script src="exchange-automation.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>

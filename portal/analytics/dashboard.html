@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - New Home Pack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="../portal.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #6e6e73;
+            font-weight: 500;
+        }
+
+        .metric-trend {
+            font-size: 0.85rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .metric-trend.up {
+            background: #d4f4dd;
+            color: #1e7b34;
+        }
+
+        .metric-trend.down {
+            background: #ffe5e5;
+            color: #c41e3a;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-subtitle {
+            font-size: 0.85rem;
+            color: #6e6e73;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .chart-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .chart-subtitle {
+            font-size: 0.9rem;
+            color: #6e6e73;
+        }
+
+        .chart-canvas {
+            position: relative;
+            height: 300px;
+        }
+
+        .funnel-stage {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .funnel-bar {
+            flex: 1;
+            height: 60px;
+            background: linear-gradient(90deg, #DC2626 0%, #FF6B35 100%);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .funnel-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+        }
+
+        .funnel-info {
+            min-width: 200px;
+        }
+
+        .funnel-stage-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .funnel-stats {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: #6e6e73;
+        }
+
+        .time-filter {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .time-filter button {
+            padding: 0.5rem 1rem;
+            border: 1px solid #d2d2d7;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .time-filter button:hover {
+            border-color: #FF6B35;
+            color: #FF6B35;
+        }
+
+        .time-filter button.active {
+            background: #FF6B35;
+            color: white;
+            border-color: #FF6B35;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid #DC2626;
+        }
+
+        .kpi-label {
+            font-size: 0.85rem;
+            color: #6e6e73;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+
+        .target-progress {
+            margin-top: 0.75rem;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #f5f5f7;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #DC2626 0%, #FF6B35 100%);
+            transition: width 0.3s ease;
+        }
+
+        .progress-label {
+            font-size: 0.75rem;
+            color: #6e6e73;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="../../index.html" class="sidebar-logo">
+                <svg width="180" height="38" viewBox="0 0 240 50" xmlns="http://www.w3.org/2000/svg">
+                    <g id="nhp-logo">
+                        <g transform="translate(5, 8)">
+                            <path d="M8 28 L20 22 L32 28 L32 34 L20 40 L8 34 Z" fill="#B71C1C"/>
+                            <path d="M20 22 L32 28 L32 34 L20 28 Z" fill="#991B1B"/>
+                            <path d="M6 20 L18 14 L30 20 L30 26 L18 32 L6 26 Z" fill="#D32F2F"/>
+                            <path d="M18 14 L30 20 L30 26 L18 20 Z" fill="#C62828"/>
+                            <path d="M6 20 L18 14 L18 20 L6 26 Z" fill="#B71C1C"/>
+                            <path d="M4 12 L16 6 L28 12 L28 18 L16 24 L4 18 Z" fill="#DC2626"/>
+                            <path d="M16 6 L28 12 L28 18 L16 12 Z" fill="#D32F2F"/>
+                            <path d="M4 12 L16 6 L16 12 L4 18 Z" fill="#C62828"/>
+                            <path d="M16 6 L16 12 M16 12 L16 24" stroke="white" stroke-width="0.5" opacity="0.3"/>
+                            <path d="M4 12 L4 18 M6 20 L6 26 M8 28 L8 34" stroke="white" stroke-width="0.5" opacity="0.2"/>
+                            <path d="M13 16 L15 18 L19 14" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M15 24 L17 26 L21 22" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+                            <path d="M17 32 L19 34 L23 30" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+                        </g>
+                        <text x="58" y="20" font-family="Inter, sans-serif" font-size="16" font-weight="800" fill="white" letter-spacing="0.5">NEW HOME</text>
+                        <text x="58" y="36" font-family="Inter, sans-serif" font-size="16" font-weight="800" fill="#DC2626" letter-spacing="0.5">PACK</text>
+                    </g>
+                </svg>
+            </a>
+
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="dashboard.html" class="sidebar-link active">
+                        <span class="sidebar-link-icon">📊</span>
+                        <span>Analytics</span>
+                    </a></li>
+                    <li><a href="../automation/dashboard.html" class="sidebar-link">
+                        <span class="sidebar-link-icon">🤖</span>
+                        <span>Automation</span>
+                    </a></li>
+                    <li><a href="../sales/dashboard.html" class="sidebar-link">
+                        <span class="sidebar-link-icon">💼</span>
+                        <span>Sales Dashboard</span>
+                    </a></li>
+                    <li><a href="../solicitor/dashboard.html" class="sidebar-link">
+                        <span class="sidebar-link-icon">⚖️</span>
+                        <span>Solicitor Portal</span>
+                    </a></li>
+                    <li><a href="../admin/dashboard.html" class="sidebar-link">
+                        <span class="sidebar-link-icon">⚙️</span>
+                        <span>Admin Portal</span>
+                    </a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>📊 Advanced Analytics</h1>
+                <p>Comprehensive performance metrics and insights</p>
+            </div>
+
+            <!-- Time Filter -->
+            <div class="time-filter">
+                <button class="active" onclick="setTimeRange('7d')">7 Days</button>
+                <button onclick="setTimeRange('30d')">30 Days</button>
+                <button onclick="setTimeRange('90d')">90 Days</button>
+                <button onclick="setTimeRange('ytd')">Year to Date</button>
+                <button onclick="setTimeRange('all')">All Time</button>
+            </div>
+
+            <!-- Key Metrics -->
+            <div class="analytics-grid">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Total Revenue</span>
+                        <span class="metric-trend up" id="revenueTrend">↑ 12%</span>
+                    </div>
+                    <div class="metric-value" id="totalRevenue">£0</div>
+                    <div class="metric-subtitle">From <span id="revenueCount">0</span> completed sales</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Conversion Rate</span>
+                        <span class="metric-trend up" id="conversionTrend">↑ 5%</span>
+                    </div>
+                    <div class="metric-value" id="conversionRate">0%</div>
+                    <div class="metric-subtitle">Lead to reservation conversion</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Avg. Days to Exchange</span>
+                        <span class="metric-trend down" id="daysTrend">↓ 2 days</span>
+                    </div>
+                    <div class="metric-value" id="avgDays">0</div>
+                    <div class="metric-subtitle">From reservation to exchange</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-label">Pipeline Value</span>
+                        <span class="metric-trend up" id="pipelineTrend">↑ 8%</span>
+                    </div>
+                    <div class="metric-value" id="pipelineValue">£0</div>
+                    <div class="metric-subtitle"><span id="pipelineCount">0</span> active reservations</div>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">Monthly Target</div>
+                    <div class="kpi-value" id="monthlyTarget">£500K</div>
+                    <div class="target-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="monthlyProgress" style="width: 0%"></div>
+                        </div>
+                        <div class="progress-label"><span id="monthlyPercent">0%</span> of target achieved</div>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-label">Average Property Value</div>
+                    <div class="kpi-value" id="avgPropertyValue">£0</div>
+                    <div class="target-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
+                        <div class="progress-label">Target: £400K</div>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-label">Customer Satisfaction</div>
+                    <div class="kpi-value" id="satisfaction">4.8/5.0</div>
+                    <div class="target-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 96%"></div>
+                        </div>
+                        <div class="progress-label">Based on 24 reviews</div>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-label">Completion Rate</div>
+                    <div class="kpi-value" id="completionRate">0%</div>
+                    <div class="target-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="completionProgress" style="width: 0%"></div>
+                        </div>
+                        <div class="progress-label">Reservations to completion</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Revenue Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h2 class="chart-title">Revenue Trend</h2>
+                    <p class="chart-subtitle">Monthly revenue and forecasts</p>
+                </div>
+                <div class="chart-canvas">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Conversion Funnel -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h2 class="chart-title">Sales Funnel</h2>
+                    <p class="chart-subtitle">Lead to completion conversion stages</p>
+                </div>
+                <div id="conversionFunnel">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Sales Performance Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h2 class="chart-title">Sales Performance</h2>
+                    <p class="chart-subtitle">Weekly sales activity and outcomes</p>
+                </div>
+                <div class="chart-canvas">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Source Analysis Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h2 class="chart-title">Lead Sources</h2>
+                    <p class="chart-subtitle">Distribution of lead acquisition channels</p>
+                </div>
+                <div class="chart-canvas">
+                    <canvas id="sourceChart"></canvas>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../demo-data.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>

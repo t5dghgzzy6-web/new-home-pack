@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exchange Automation Test - New Home Pack</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #FF6B35;
+        }
+
+        .info-box {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .info-box h2 {
+            margin-bottom: 1rem;
+            color: #1d1d1f;
+        }
+
+        .info-box p {
+            margin-bottom: 0.5rem;
+            color: #6e6e73;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            margin-right: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .btn-primary {
+            background: #FF6B35;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #E55A2B;
+        }
+
+        .btn-secondary {
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8ed;
+        }
+
+        .btn-success {
+            background: #34C759;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #2FB350;
+        }
+
+        .btn-danger {
+            background: #FF3B30;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #E02F25;
+        }
+
+        .button-group {
+            margin: 1.5rem 0;
+        }
+
+        .status {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .status.success {
+            background: #d4f4dd;
+            color: #1e7b34;
+        }
+
+        .status.error {
+            background: #ffe5e5;
+            color: #c41e3a;
+        }
+
+        .status.info {
+            background: #e5f3ff;
+            color: #0066cc;
+        }
+
+        code {
+            background: #f5f5f7;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        pre {
+            background: #1d1d1f;
+            color: #f5f5f7;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        pre code {
+            background: none;
+            color: #f5f5f7;
+            padding: 0;
+        }
+
+        .demo-reservation {
+            background: #f5f5f7;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+        }
+
+        .demo-reservation strong {
+            color: #FF6B35;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Exchange Automation Test Page</h1>
+
+        <div class="info-box">
+            <h2>About This System</h2>
+            <p>The exchange automation system automatically monitors all reservations and sends email reminders at critical milestones:</p>
+            <ul>
+                <li><strong>7 days before deadline:</strong> Orange "Urgent" reminder</li>
+                <li><strong>3 days before deadline:</strong> Red "Critical" reminder</li>
+                <li><strong>1 day before deadline:</strong> Red "Final Warning" reminder</li>
+            </ul>
+            <p style="margin-top: 1rem;">The system runs automatically every hour and prevents duplicate reminders by tracking what's been sent.</p>
+        </div>
+
+        <div class="info-box">
+            <h2>Quick Start</h2>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="addDemoData()">1️⃣ Add Demo Reservations</button>
+                <button class="btn btn-success" onclick="goToDashboard()">2️⃣ View Dashboard</button>
+                <button class="btn btn-danger" onclick="clearData()">🗑️ Clear Demo Data</button>
+            </div>
+            
+            <div id="statusMessage"></div>
+        </div>
+
+        <div class="info-box">
+            <h2>Demo Reservations</h2>
+            <p>Click "Add Demo Reservations" to create test data. The system will create 3 reservations at different stages:</p>
+            
+            <div class="demo-reservation">
+                <strong>Reservation 1:</strong> John Smith - Plot 12, Riverside Gardens<br>
+                Reserved 21 days ago → <strong>7 days until exchange deadline</strong> (Urgent reminder will be sent)
+            </div>
+            
+            <div class="demo-reservation">
+                <strong>Reservation 2:</strong> Sarah Johnson - Plot 8, Meadow View<br>
+                Reserved 25 days ago → <strong>3 days until exchange deadline</strong> (Critical reminder will be sent)
+            </div>
+            
+            <div class="demo-reservation">
+                <strong>Reservation 3:</strong> Michael Brown - Plot 15, Oak Heights<br>
+                Reserved 27 days ago → <strong>1 day until exchange deadline</strong> (Final warning will be sent)
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h2>Testing Instructions</h2>
+            <ol style="line-height: 2;">
+                <li>Click <strong>"Add Demo Reservations"</strong> to create test data</li>
+                <li>Click <strong>"View Dashboard"</strong> to open the automation dashboard</li>
+                <li>On the dashboard, click <strong>"Check Now"</strong> to trigger the automation</li>
+                <li>Watch the system detect the 3 reservations and send reminder emails</li>
+                <li>Check the <strong>"Upcoming Reminders"</strong> section to see what's scheduled</li>
+                <li>Review the <strong>"Reminder Log"</strong> to see what was sent</li>
+                <li>View <strong>Statistics</strong> showing critical/urgent deadlines</li>
+            </ol>
+        </div>
+
+        <div class="info-box">
+            <h2>Console Commands</h2>
+            <p>You can also test via the browser console (F12):</p>
+            <pre><code>// Add demo data
+window.addDemoData();
+
+// Clear demo data
+window.clearDemoData();
+
+// Check automation status
+exchangeAutomation.getStatus();
+
+// View statistics
+exchangeAutomation.getStatistics();
+
+// Manual check
+exchangeAutomation.triggerManualCheck();
+
+// View reminder history for a reservation
+exchangeAutomation.getReminderHistory('RES-1');</code></pre>
+        </div>
+
+        <div class="info-box">
+            <h2>Integration</h2>
+            <p>The automation system is already integrated into:</p>
+            <ul>
+                <li><strong>Buyer Dashboard:</strong> Shows exchange countdown</li>
+                <li><strong>Solicitor Dashboard:</strong> Critical deadline alerts</li>
+                <li><strong>Sales Dashboard:</strong> Today's tasks include exchange follow-ups</li>
+                <li><strong>Email Service:</strong> Uses the exchangeReminder template</li>
+            </ul>
+            <p style="margin-top: 1rem;">To enable automation on other pages, add:</p>
+            <pre><code>&lt;script src="automation/exchange-automation.js"&gt;&lt;/script&gt;</code></pre>
+        </div>
+    </div>
+
+    <script src="email-service.js"></script>
+    <script src="automation/exchange-automation.js"></script>
+    <script>
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function addDemoData() {
+            const today = new Date();
+            
+            // Check if demo data already exists
+            const existing = localStorage.getItem('nhp_reservation_RES-1');
+            if (existing) {
+                showStatus('⚠️ Demo data already exists. Clear it first or view the dashboard.', 'info');
+                return;
+            }
+            
+            // Demo reservation 1 - 7 days until deadline
+            const res1 = {
+                id: 'RES-1',
+                reservationDate: new Date(today.getTime() - (21 * 24 * 60 * 60 * 1000)).getTime(),
+                buyerName: 'John Smith',
+                buyerEmail: 'john.smith@example.com',
+                plotNumber: '12',
+                developmentName: 'Riverside Gardens',
+                price: 425000,
+                solicitorEmail: 'solicitor@lawfirm.com'
+            };
+            
+            // Demo reservation 2 - 3 days until deadline
+            const res2 = {
+                id: 'RES-2',
+                reservationDate: new Date(today.getTime() - (25 * 24 * 60 * 60 * 1000)).getTime(),
+                buyerName: 'Sarah Johnson',
+                buyerEmail: 'sarah.j@example.com',
+                plotNumber: '8',
+                developmentName: 'Meadow View',
+                price: 385000,
+                solicitorEmail: 'solicitor@lawfirm.com'
+            };
+            
+            // Demo reservation 3 - 1 day until deadline
+            const res3 = {
+                id: 'RES-3',
+                reservationDate: new Date(today.getTime() - (27 * 24 * 60 * 60 * 1000)).getTime(),
+                buyerName: 'Michael Brown',
+                buyerEmail: 'mbrown@example.com',
+                plotNumber: '15',
+                developmentName: 'Oak Heights',
+                price: 475000,
+                solicitorEmail: 'solicitor@lawfirm.com'
+            };
+            
+            localStorage.setItem('nhp_reservation_RES-1', JSON.stringify(res1));
+            localStorage.setItem('nhp_reservation_RES-2', JSON.stringify(res2));
+            localStorage.setItem('nhp_reservation_RES-3', JSON.stringify(res3));
+            
+            showStatus('✅ Demo data created! 3 reservations added with different deadlines. Click "View Dashboard" to see them.', 'success');
+        }
+
+        function clearData() {
+            ['RES-1', 'RES-2', 'RES-3'].forEach(id => {
+                localStorage.removeItem(`nhp_reservation_${id}`);
+                localStorage.removeItem(`nhp_reminders_${id}`);
+            });
+            localStorage.removeItem('nhp_reminder_log');
+            
+            showStatus('🗑️ Demo data cleared. You can add it again using "Add Demo Reservations".', 'info');
+        }
+
+        function goToDashboard() {
+            window.location.href = 'automation/dashboard.html';
+        }
+
+        // Export for console
+        window.addDemoData = addDemoData;
+        window.clearDemoData = clearData;
+    </script>
+</body>
+</html>

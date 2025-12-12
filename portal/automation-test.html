@@ -251,8 +251,10 @@ exchangeAutomation.getReminderHistory('RES-1');</code></pre>
         </div>
     </div>
 
-    <script src="email-service.js"></script>
-    <script src="automation/exchange-automation.js"></script>
+    <script>
+        // Note: Automation scripts are optional for this test page
+        // This page works standalone with localStorage
+    </script>
     <script>
         function showStatus(message, type = 'info') {
             const statusDiv = document.getElementById('statusMessage');

@@ -1,3 +1,152 @@
+// Load today's tasks for solicitor
+function loadSolicitorTodaysTasks() {
+    const container = document.getElementById('solicitorTodaysTasks');
+    const today = new Date().setHours(0, 0, 0, 0);
+    const tomorrow = today + (24 * 60 * 60 * 1000);
+    const user = JSON.parse(localStorage.getItem('nhp_user'));
+    const allReservations = getAllReservations();
+    const myCases = allReservations.filter(r => r.solicitorEmail === user.email);
+    const enquiries = getEnquiries();
+    const documents = getLegalDocuments();
+    const tasks = [];
+
+    // Exchange deadlines (within 7 days)
+    myCases.forEach(caseData => {
+        if (!caseData.exchangeDate) {
+            const reservationDate = new Date(caseData.reservationDate);
+            const exchangeDeadline = new Date(reservationDate);
+            exchangeDeadline.setDate(exchangeDeadline.getDate() + 28);
+            const daysRemaining = Math.ceil((exchangeDeadline - Date.now()) / (1000 * 60 * 60 * 24));
+            if (daysRemaining <= 7 && exchangeDeadline >= today && exchangeDeadline < tomorrow) {
+                tasks.push({
+                    type: 'exchange_deadline',
+                    priority: daysRemaining <= 3 ? 'critical' : 'high',
+                    title: `Exchange deadline approaching - Plot ${caseData.plotNumber}`,
+                    description: `${caseData.buyerName} - ${caseData.developmentName || 'Development'} (${daysRemaining} days remaining)`,
+                    action: `viewCase('${caseData.id}')`,
+                    time: exchangeDeadline.getTime()
+                });
+            }
+        }
+    });
+
+    // Unanswered enquiries (older than 2 days)
+    const myEnquiries = enquiries.filter(e => e.solicitorEmail === user.email && e.status === 'pending');
+    myEnquiries.forEach(enquiry => {
+        const enquiryDate = new Date(enquiry.date);
+        const daysSince = Math.ceil((Date.now() - enquiryDate) / (1000 * 60 * 60 * 24));
+        if (daysSince >= 2 && enquiryDate >= today && enquiryDate < tomorrow) {
+            tasks.push({
+                type: 'enquiry',
+                priority: daysSince >= 5 ? 'high' : 'medium',
+                title: `Unanswered enquiry - ${daysSince} days old`,
+                description: `Plot ${enquiry.plotNumber} - ${enquiry.subject}`,
+                action: `viewEnquiry('${enquiry.id}')`,
+                time: enquiryDate.getTime()
+            });
+        }
+    });
+
+    // Missing documents (searches, lease, transfer)
+    myCases.forEach(caseData => {
+        const caseDocuments = documents.filter(d => d.plotNumber === caseData.plotNumber);
+        const requiredDocTypes = ['searches', 'lease', 'transfer'];
+        requiredDocTypes.forEach(docType => {
+            const hasDoc = caseDocuments.some(d => d.category === docType);
+            if (!hasDoc && caseData.reservationDate) {
+                const resDate = new Date(caseData.reservationDate);
+                if (resDate >= today && resDate < tomorrow) {
+                    tasks.push({
+                        type: 'document',
+                        priority: 'medium',
+                        title: `Missing ${docType} for Plot ${caseData.plotNumber}`,
+                        description: `${caseData.buyerName} - Required for conveyancing`,
+                        action: `requestDocument('${caseData.plotNumber}', '${docType}')`,
+                        time: resDate.getTime()
+                    });
+                }
+            }
+        });
+    });
+
+    // Sort by priority and time
+    const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
+    tasks.sort((a, b) => {
+        if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
+            return priorityOrder[a.priority] - priorityOrder[b.priority];
+        }
+        return a.time - b.time;
+    });
+
+    document.getElementById('solicitorTaskCount').textContent = `${tasks.length} tasks`;
+
+    if (tasks.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">✅</div>
+                <h3 class="empty-state-title">All Clear!</h3>
+                <p class="empty-state-text">No tasks scheduled for today.</p>
+            </div>
+        `;
+        return;
+    }
+
+    let html = '<div style="padding: 1.5rem;">';
+    tasks.forEach(task => {
+        let priorityColor = '';
+        let priorityLabel = '';
+        let icon = '';
+        switch (task.priority) {
+            case 'critical':
+                priorityColor = '#DC2626';
+                priorityLabel = '🔴 CRITICAL';
+                break;
+            case 'high':
+                priorityColor = '#F59E0B';
+                priorityLabel = '🟠 HIGH';
+                break;
+            case 'medium':
+                priorityColor = '#3B82F6';
+                priorityLabel = '🔵 MEDIUM';
+                break;
+            default:
+                priorityColor = '#6B7280';
+                priorityLabel = '⚪ LOW';
+        }
+        switch (task.type) {
+            case 'exchange_deadline':
+                icon = '⏰';
+                break;
+            case 'enquiry':
+                icon = '📋';
+                break;
+            case 'document':
+                icon = '📄';
+                break;
+            default:
+                icon = '📋';
+        }
+        const timeDisplay = new Date(task.time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+        html += `
+            <div style="border-left: 4px solid ${priorityColor}; padding: 1rem; margin-bottom: 1rem; background: #F9FAFB; border-radius: 0 0.5rem 0.5rem 0; cursor: pointer;" onclick="${task.action}">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <span style="font-size: 1.25rem;">${icon}</span>
+                            <span style="font-size: 0.75rem; font-weight: 700; color: ${priorityColor}; letter-spacing: 0.05em;">${priorityLabel}</span>
+                            <span style="font-size: 0.875rem; color: #6B7280;">${timeDisplay}</span>
+                        </div>
+                        <h4 style="font-size: 1rem; font-weight: 600; margin: 0 0 0.25rem 0;">${task.title}</h4>
+                        <p style="color: #6B7280; font-size: 0.875rem; margin: 0;">${task.description}</p>
+                    </div>
+                    <button class="btn btn-primary btn-small">View</button>
+                </div>
+            </div>
+        `;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
 // Solicitor Dashboard JavaScript
 // Initialize dashboard data and populate UI
 

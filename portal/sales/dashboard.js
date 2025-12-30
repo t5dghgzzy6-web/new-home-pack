@@ -17,7 +17,21 @@ document.addEventListener('DOMContentLoaded', function() {
     loadTodaysTasks();
     loadRecentActivity();
     populateFilters();
+    setupCommissionFeatureBtn();
 });
+// Commission feature placeholder
+function setupCommissionFeatureBtn() {
+    const btn = document.getElementById('commissionFeatureBtn');
+    if (btn) {
+        btn.addEventListener('click', function() {
+            const msg = document.getElementById('commissionFeatureMsg');
+            if (msg) {
+                msg.style.display = 'block';
+                setTimeout(() => { msg.style.display = 'none'; }, 2500);
+            }
+        });
+    }
+}
 
 // Load user information
 function loadUserInfo() {
@@ -258,8 +272,68 @@ function loadTodaysTasks() {
                 time: lead.nextFollowUp
             });
         }
+
+        // Offer approval required
+        if (lead.status === 'offer_made' && lead.offerDate && lead.offerDate >= today && lead.offerDate < tomorrow) {
+            tasks.push({
+                type: 'offer_approval',
+                priority: 'critical',
+                title: `Approve offer for ${lead.name}`,
+                description: `${lead.development || 'Development'} - Plot ${lead.plotInterest || 'TBC'}`,
+                action: `viewLead('${lead.id}')`,
+                time: lead.offerDate
+            });
+        }
+
+        // Source of funds request
+        if (lead.status === 'offer_approved' && lead.sourceOfFundsRequested && lead.sourceOfFundsRequested >= today && lead.sourceOfFundsRequested < tomorrow) {
+            tasks.push({
+                type: 'source_of_funds',
+                priority: 'high',
+                title: `Request source of funds from ${lead.name}`,
+                description: `${lead.development || 'Development'} - Plot ${lead.plotInterest || 'TBC'}`,
+                action: `viewLead('${lead.id}')`,
+                time: lead.sourceOfFundsRequested
+            });
+        }
+
+        // DIP request
+        if (lead.status === 'offer_approved' && lead.dipRequested && lead.dipRequested >= today && lead.dipRequested < tomorrow) {
+            tasks.push({
+                type: 'dip_request',
+                priority: 'high',
+                title: `Request DIP from ${lead.name}`,
+                description: `${lead.development || 'Development'} - Plot ${lead.plotInterest || 'TBC'}`,
+                action: `viewLead('${lead.id}')`,
+                time: lead.dipRequested
+            });
+        }
+
+        // Reservation form signing
+        if (lead.status === 'dip_received' && lead.reservationFormDue && lead.reservationFormDue >= today && lead.reservationFormDue < tomorrow) {
+            tasks.push({
+                type: 'reservation_form',
+                priority: 'high',
+                title: `Send reservation form to ${lead.name}`,
+                description: `${lead.development || 'Development'} - Plot ${lead.plotInterest || 'TBC'}`,
+                action: `viewLead('${lead.id}')`,
+                time: lead.reservationFormDue
+            });
+        }
+
+        // Legal checks
+        if (lead.status === 'reserved' && lead.legalCheckDue && lead.legalCheckDue >= today && lead.legalCheckDue < tomorrow) {
+            tasks.push({
+                type: 'legal_check',
+                priority: 'high',
+                title: `Legal check for ${lead.name}`,
+                description: `${lead.development || 'Development'} - Plot ${lead.plotInterest || 'TBC'}`,
+                action: `viewLead('${lead.id}')`,
+                time: lead.legalCheckDue
+            });
+        }
     });
-    
+
     // Viewings today
     allLeads.forEach(lead => {
         if (lead.viewingDate && lead.viewingDate >= today && lead.viewingDate < tomorrow) {
@@ -273,7 +347,7 @@ function loadTodaysTasks() {
             });
         }
     });
-    
+
     // Exchange deadlines (within 7 days)
     allReservations.forEach(res => {
         if (!res.exchangeDate) {

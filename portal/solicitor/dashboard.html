@@ -79,6 +79,8 @@
 
         <!-- Main Content -->
         <main class="dashboard-main">
+            <!-- Quick Actions & Help Sub-list -->
+            <div id="settingsActionsContainer"></div>
             <!-- Header -->
             <header class="dashboard-header">
                 <div>
@@ -120,6 +122,15 @@
                 <div id="recentCases"></div>
             </div>
 
+            <!-- Today's Tasks -->
+            <div class="table-container" style="margin-bottom: 2rem;">
+                <div class="table-header">
+                    <h2 class="table-title">Today's Tasks</h2>
+                    <span id="solicitorTaskCount" style="color: #6B7280; font-size: 0.875rem;">0 tasks</span>
+                </div>
+                <div id="solicitorTodaysTasks"></div>
+            </div>
+
             <!-- Urgent Actions -->
             <div class="table-container">
                 <div class="table-header">
@@ -131,6 +142,22 @@
     </div>
 
     <script src="../auth.js"></script>
+            <script>
+            // Dynamically load the quick actions sub-list for maintainability
+            fetch('settings-actions.html')
+                .then(r => r.text())
+                .then(html => {
+                    document.getElementById('settingsActionsContainer').innerHTML = html;
+                });
+            </script>
     <script src="dashboard.js"></script>
+    <script>
+    // Load solicitor today's tasks after DOM ready
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof loadSolicitorTodaysTasks === 'function') {
+            loadSolicitorTodaysTasks();
+        }
+    });
+    </script>
 </body>
 </html>

@@ -48,6 +48,10 @@
                     <span class="nav-icon">⚙️</span>
                     <span class="nav-text">Settings</span>
                 </a>
+                <a href="howto.html" class="nav-link">
+                    <span class="nav-icon">❓</span>
+                    <span class="nav-text">Help & How To</span>
+                </a>
             </nav>
 
             <div class="sidebar-footer">
@@ -63,6 +67,8 @@
         </aside>
 
         <!-- Main Content -->
+            <!-- Quick Actions & Help Sub-list -->
+            <div id="settingsActionsContainer"></div>
         <main class="portal-main">
             <header class="portal-header">
                 <div>
@@ -240,6 +246,14 @@
     </div>
 
     <script src="../auth.js"></script>
+            <script>
+            // Dynamically load the quick actions sub-list for maintainability
+            fetch('settings-actions.html')
+                .then(r => r.text())
+                .then(html => {
+                    document.getElementById('settingsActionsContainer').innerHTML = html;
+                });
+            </script>
     <script src="settings.js"></script>
 </body>
 </html>

@@ -14,16 +14,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Demo plot data (in production, this would come from API)
 let plots = [
-    { id: 1, number: 'Plot 1', development: 'Greenfield Gardens', type: 'Detached', bedrooms: 4, price: 425000, status: 'reserved', downloads: 8, buyer: 'John Smith' },
-    { id: 2, number: 'Plot 2', development: 'Greenfield Gardens', type: 'Semi-Detached', bedrooms: 3, price: 325000, status: 'available', downloads: 15, buyer: null },
-    { id: 3, number: 'Plot 3', development: 'Riverside Heights', type: 'Apartment', bedrooms: 2, price: 245000, status: 'exchanged', downloads: 6, buyer: 'Sarah Jones' },
-    { id: 4, number: 'Plot 4', development: 'Riverside Heights', type: 'Townhouse', bedrooms: 3, price: 365000, status: 'available', downloads: 22, buyer: null },
-    { id: 5, number: 'Plot 5', development: 'Oakwood Manor', type: 'Detached', bedrooms: 5, price: 595000, status: 'completed', downloads: 4, buyer: 'Emma Wilson' }
+    // Will be loaded from developments in localStorage
 ];
 
 function loadPlots() {
-    // In production, fetch from API
-    console.log('Plots loaded:', plots.length);
+    // Load all plots from all developments in localStorage
+    plots = [];
+    const stored = localStorage.getItem('developments');
+    if (stored) {
+        const devs = JSON.parse(stored);
+        let idCounter = 1;
+        devs.forEach(dev => {
+            if (dev.plots && Array.isArray(dev.plots)) {
+                dev.plots.forEach(plot => {
+                    plots.push({
+                        id: idCounter++,
+                        number: plot.number,
+                        development: dev.name,
+                        type: plot.type,
+                        bedrooms: plot.bedrooms,
+                        price: plot.price,
+                        status: plot.status,
+                        downloads: plot.downloads || 0,
+                        buyer: plot.buyer || null
+                    });
+                });
+            }
+        });
+    }
+    renderPlotsTable();
+    // Debug: Output loaded plots to console and page
+    console.log('Loaded plots:', plots);
+    let debugDiv = document.getElementById('plotsDebug');
+    if (!debugDiv) {
+        debugDiv = document.createElement('div');
+        debugDiv.id = 'plotsDebug';
+        debugDiv.style = 'margin:1rem 0;padding:1rem;background:#f3f4f6;color:#374151;font-size:0.9rem;max-height:200px;overflow:auto;';
+        const main = document.querySelector('main') || document.body;
+        main.insertBefore(debugDiv, main.firstChild);
+    }
+    debugDiv.innerHTML = '<strong>Debug: Loaded Plots</strong><pre>' + JSON.stringify(plots, null, 2) + '</pre>';
+}
+
+function renderPlotsTable() {
+    const tbody = document.querySelector('#plotsTable tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    plots.forEach(plot => {
+        const row = createPlotRow(plot);
+        tbody.appendChild(row);
+    });
+}
 }
 
 function setupFilters() {

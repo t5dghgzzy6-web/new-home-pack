@@ -5,7 +5,187 @@ let developments = [];
 document.addEventListener('DOMContentLoaded', () => {
     loadDevelopments();
     updateUserName();
+    setupBulkImportModal();
+    populateImportTarget();
+    setupPhaseUI();
+// MVP Phase Management Logic
+function setupPhaseUI() {
+    document.getElementById('phasesSection')?.addEventListener('click', renderPhasesList);
+    renderPhasesList();
+}
+
+function showAddPhaseModal() {
+    document.getElementById('addPhaseModal').style.display = 'block';
+}
+function closeAddPhaseModal() {
+    document.getElementById('addPhaseModal').style.display = 'none';
+    document.getElementById('addPhaseForm').reset();
+}
+
+function handleAddPhase(event) {
+    event.preventDefault();
+    // For MVP, add phase to first development
+    if (developments.length === 0) return;
+    const dev = developments[0];
+    dev.phases = dev.phases || [];
+    const phaseId = 'phase-' + Date.now() + '-' + Math.random().toString(36).substr(2,5);
+    const phaseName = document.getElementById('phaseName').value;
+    dev.phases.push({ id: phaseId, name: phaseName, plots: [], documents: [] });
+    localStorage.setItem('developments', JSON.stringify(developments));
+    closeAddPhaseModal();
+    renderPhasesList();
+}
+
+function renderPhasesList() {
+    const phasesList = document.getElementById('phasesList');
+    if (!phasesList) return;
+    if (developments.length === 0) {
+        phasesList.innerHTML = '<p>No developments found.</p>';
+        return;
+    }
+    const dev = developments[0];
+    dev.phases = dev.phases || [];
+    if (dev.phases.length === 0) {
+        phasesList.innerHTML = '<p>No phases added yet.</p>';
+        return;
+    }
+    phasesList.innerHTML = dev.phases.map(phase => `
+        <div class="phase-card" style="border:1px solid #e5e7eb; border-radius:8px; padding:1rem; margin-bottom:1rem;">
+            <h3 style="margin:0 0 0.5rem 0;">${phase.name}</h3>
+            <p>Plots: ${phase.plots.length > 0 ? phase.plots.join(', ') : 'None assigned'}</p>
+            <p>Documents: ${phase.documents.length > 0 ? phase.documents.join(', ') : 'None assigned'}</p>
+            <button class="btn btn-secondary" onclick="showAssignPlotsModal('${phase.id}')">Assign Plots</button>
+            <button class="btn btn-secondary" onclick="showAssignDocumentsModal('${phase.id}')">Assign Documents</button>
+        </div>
+    `).join('');
+}
 });
+// Populate the import target dropdown with existing developments
+function populateImportTarget() {
+    const select = document.getElementById('importTarget');
+    if (!select) return;
+    // Remove all except 'new'
+    while (select.options.length > 1) select.remove(1);
+    developments.forEach(dev => {
+        const opt = document.createElement('option');
+        opt.value = dev.id;
+        opt.textContent = `Existing: ${dev.name} (${dev.location})`;
+        select.appendChild(opt);
+    });
+}
+// Bulk Import Modal logic
+function showBulkImportModal() {
+    document.getElementById('bulkImportModal').style.display = 'block';
+    document.getElementById('bulkImportResult').style.display = 'none';
+    populateImportTarget();
+}
+function closeBulkImportModal() {
+    document.getElementById('bulkImportModal').style.display = 'none';
+}
+function setupBulkImportModal() {
+    // Close modal on outside click
+    window.onclick = function(event) {
+        const modal = document.getElementById('bulkImportModal');
+        if (event.target === modal) {
+            closeBulkImportModal();
+        }
+    };
+}
+
+function downloadSampleCSV() {
+    const csv = `Development Name,Location,Description,Status,Main Image URL,Plot Number,Plot Type,Bedrooms,Bathrooms,Price,Plot Status\nRiverside Gardens,Manchester,Luxury riverside homes,selling,https://example.com/image.jpg,1,House,3,2,350000,available\nRiverside Gardens,Manchester,Luxury riverside homes,selling,https://example.com/image.jpg,2,House,4,3,425000,reserved`;
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'sample_development_import.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function handleBulkImport(event) {
+    event.preventDefault();
+    const fileInput = document.getElementById('bulkFile');
+    const file = fileInput.files[0];
+    const importTarget = document.getElementById('importTarget').value;
+    if (!file) return;
+    Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+            const rows = results.data;
+            let imported = 0;
+            let dev = null;
+            let importSummary = [];
+            let devsImported = new Set();
+            if (importTarget !== 'new') {
+                // Import to existing development
+                dev = developments.find(d => d.id === importTarget);
+                if (!dev) {
+                    document.getElementById('bulkImportResult').textContent = 'Selected development not found.';
+                    document.getElementById('bulkImportResult').style.color = '#DC2626';
+                    document.getElementById('bulkImportResult').style.display = 'block';
+                    return;
+                }
+                dev.plots = dev.plots || [];
+                devsImported.add(`${dev.name} (${dev.location})`);
+            }
+            rows.forEach(row => {
+                if (importTarget === 'new') {
+                    // Find or create development by name/location in CSV
+                    let found = developments.find(d => d.name === row['Development Name'] && d.location === row['Location']);
+                    if (!found) {
+                        found = {
+                            id: 'dev-' + Date.now() + '-' + Math.random().toString(36).substr(2,5),
+                            name: row['Development Name'],
+                            location: row['Location'],
+                            description: row['Description'],
+                            status: row['Status'],
+                            image: row['Main Image URL'],
+                            totalPlots: 0,
+                            availablePlots: 0,
+                            reservedPlots: 0,
+                            soldPlots: 0,
+                            plots: [],
+                            createdDate: new Date().toISOString()
+                        };
+                        developments.push(found);
+                    }
+                    dev = found;
+                    devsImported.add(`${dev.name} (${dev.location})`);
+                }
+                // Add plot
+                if (row['Plot Number']) {
+                    const plot = {
+                        number: row['Plot Number'],
+                        type: row['Plot Type'],
+                        bedrooms: parseInt(row['Bedrooms'] || '0'),
+                        bathrooms: parseInt(row['Bathrooms'] || '0'),
+                        price: parseFloat(row['Price'] || '0'),
+                        status: row['Plot Status']
+                    };
+                    dev.plots = dev.plots || [];
+                    dev.plots.push(plot);
+                    dev.totalPlots++;
+                    if (plot.status === 'available') dev.availablePlots++;
+                    if (plot.status === 'reserved') dev.reservedPlots++;
+                    if (plot.status === 'sold') dev.soldPlots++;
+                }
+                imported++;
+            });
+            localStorage.setItem('developments', JSON.stringify(developments));
+            renderDevelopments();
+            const devList = Array.from(devsImported).join(', ');
+            document.getElementById('bulkImportResult').textContent = `Imported ${imported} plots successfully into: ${devList}`;
+            document.getElementById('bulkImportResult').style.display = 'block';
+        },
+        error: function() {
+            document.getElementById('bulkImportResult').textContent = 'Error parsing CSV.';
+            document.getElementById('bulkImportResult').style.color = '#DC2626';
+            document.getElementById('bulkImportResult').style.display = 'block';
+        }
+    });
+}
 
 function updateUserName() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
